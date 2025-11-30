@@ -1,10 +1,9 @@
 fastapi
 uvicorn
 python-dotenv
-pydantic
+python-multipart
 reportlab
 fpdf
 groq
-google-generativeai
-pandas
-streamlit
+
+
