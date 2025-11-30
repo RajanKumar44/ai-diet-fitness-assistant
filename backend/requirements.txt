@@ -7,3 +7,9 @@ google-generativeai
 
 
 uvicorn api:app --reload
+fastapi
+uvicorn
+python-dotenv
+pydantic
+reportlab
+groq
