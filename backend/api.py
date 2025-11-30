@@ -212,6 +212,7 @@ def chat_api(body: Dict[str, Any]) -> Dict[str, Any]:
 # ------------------------
 # EXPORT SUMMARY TO PDF
 # ------------------------
+from fastapi import Request
 @app.post("/export-summary")
 def export_summary(body: Dict[str, Any]):
     username = body.get("username", "User")
@@ -258,8 +259,11 @@ def export_summary(body: Dict[str, Any]):
 
     filename = os.path.basename(pdf_path)
 
+     # ⭐ NEW: Auto-detect base URL (works on Render + Local)
+    base_url = str(Request.base_url).rstrip("/")
+
     return {
         "success": True,
-        "pdf_url": f"http://localhost:8000/static/{filename}",
+        "pdf_url": f"{base_url}/static/{filename}",   # ⭐ FIXED LINE
         "history": history[username]
     }
