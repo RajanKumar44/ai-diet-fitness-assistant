@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Fitness Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Icons (for sidebar + buttons) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-S+8x4J3N..."
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+</head>
+<body>
+  <div class="app">
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-dot"></span>
+        <div class="logo-text">
+          <div class="logo-title">AI Fitness</div>
+          <div class="logo-subtitle">Assistant</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item" onclick="window.location.href='index.html'">
+           <i class="fa-solid fa-arrow-left"></i>
+           <span>Home</span>
+        </button>
+
+
+
+        <button class="nav-item active" data-target="dashboard">
+          <i class="fa-solid fa-house"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-target="profile">
+          <i class="fa-solid fa-user"></i>
+          <span>Profile</span>
+        </button>
+        <button class="nav-item" data-target="diet">
+          <i class="fa-solid fa-utensils"></i>
+          <span>Diet Plan</span>
+        </button>
+        <button class="nav-item" data-target="workout">
+          <i class="fa-solid fa-dumbbell"></i>
+          <span>Workout</span>
+        </button>
+        <button class="nav-item" data-target="advanced">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Advanced Generator</span>
+        </button>
+
+        <button class="nav-item" data-target="calories">
+          <i class="fa-solid fa-calculator"></i>
+          <span>Calories</span>
+        </button>
+        <button class="nav-item" data-target="recommendation">
+           <i class="fa-solid fa-star"></i>
+           <span>AI Recommendation</span>
+        </button>
+        <button class="nav-item" data-target="coach">
+          <i class="fa-solid fa-comments"></i>
+          <span>AI Coach</span>
+        </button>
+        <button class="nav-item" data-target="history">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>History</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="main">
+
+      <!-- DASHBOARD -->
+      <section id="dashboard" class="page active">
+        <header class="page-header">
+          <div>
+            <h1 class="page-title">Welcome back, Guest! <span class="wave">👋</span></h1>
+            <p class="page-subtitle">Your personalized AI fitness journey continues</p>
+          </div>
+        </header>
+
+        <div class="grid cards-3">
+          <div class="card metric-card">
+            <p class="metric-label">BMI Status</p>
+            <h2 class="metric-value">23.5</h2>
+            <p class="metric-sub">Normal Range</p>
+          </div>
+          <div class="card metric-card">
+            <p class="metric-label">Daily Goal</p>
+            <h2 class="metric-value">2000</h2>
+            <p class="metric-sub">Calories Target</p>
+          </div>
+          <div class="card metric-card">
+            <p class="metric-label">Today's Progress</p>
+            <h2 class="metric-value">1450</h2>
+            <p class="metric-sub">73% of goal</p>
+          </div>
+        </div>
+
+        <div class="card quick-actions-card">
+          <div class="section-header">
+            <h2>Quick Actions</h2>
+          </div>
+          <div class="grid quick-actions">
+            <button class="quick-btn" data-target="diet">
+              <i class="fa-solid fa-bullseye"></i>
+              <span>Generate Diet Plan</span>
+            </button>
+            <button class="quick-btn" data-target="workout">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Create Workout</span>
+            </button>
+            <button class="quick-btn" data-target="calories">
+              <i class="fa-solid fa-chart-line"></i>
+              <span>Track Calories</span>
+            </button>
+            <button class="quick-btn" data-target="coach">
+              <i class="fa-solid fa-robot"></i>
+              <span>AI Coach Chat</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card motivation-card">
+          <div class="motivation-title">
+            <i class="fa-solid fa-dumbbell"></i>
+            <span>Today's Motivation</span>
+          </div>
+          <p class="motivation-text">
+            "The only bad workout is the one that didn't happen. Keep pushing forward!"
+          </p>
+        </div>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="profile" class="page">
+        <header class="page-header">
+          <h1 class="page-title">User Profile</h1>
+          <p class="page-subtitle">Manage your fitness profile</p>
+        </header>
+
+        <div class="card form-card">
+          <form class="grid profile-grid">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="profile_name" placeholder="Enter your name" />
+            </div>
+            <div class="form-group">
+              <label>Age</label>
+              <input type="number" id="profile_age" placeholder="Your age" />
+            </div>
+            <div class="form-group">
+              <label>Weight (kg)</label>
+              <input type="number" id="profile_weight" placeholder="Your weight" />
+            </div>
+            <div class="form-group">
+              <label>Height (cm)</label>
+              <input type="number" id="profile_height" placeholder="Your height" />
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select id="profile_gender">
+                <option>Select gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Fitness Goal</label>
+              <select id="profile_goal">
+                <option>Select goal</option>
+                <option>Weight Loss</option>
+                <option>Muscle Gain</option>
+                <option>Maintain Weight</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Activity Level</label>
+              <select id="profile_activity">
+                <option>Select activity level</option>
+                <option>Low</option>
+                <option>Moderate</option>
+                <option>High</option>
+              </select>
+            </div>
+          </form>
+
+          <button id="profileSaveBtn" class="primary-btn">Save Profile</button>
+        </div>
+      </section>
+
+      <!-- DIET PLAN -->
+      <section id="diet" class="page">
+        <header class="page-header">
+          <h1 class="page-title">AI Diet Plan Generator</h1>
+          <p class="page-subtitle">Get personalized meal recommendations</p>
+        </header>
+
+        <div class="card form-card">
+          <div class="form-group">
+            <label>Diet Preference</label>
+            <select id="dietPreference">
+              <option>Select diet type</option>
+              <option>Vegetarian</option>
+              <option>Non-Vegetarian</option>
+              <option>Vegan</option>
+            </select>
+          </div>
+          <button class="primary-btn" id="btnGenerateDiet">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Generate Diet Plan</span>
+          </button>
+
+          <textarea id="dietResult" class="result-area" placeholder="Your diet plan will appear here..."></textarea>
+        </div>
+      </section>
+
+      <!-- WORKOUT -->
+      <section id="workout" class="page">
+        <header class="page-header">
+          <h1 class="page-title">AI Workout Plan Generator</h1>
+          <p class="page-subtitle">Custom workouts tailored to you</p>
+        </header>
+
+        <div class="card form-card">
+          <div class="form-group">
+            <label>Experience Level</label>
+            <select id="workoutExperience">
+              <option>Select experience</option>
+              <option>Beginner</option>
+              <option>Intermediate</option>
+              <option>Advanced</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Equipment Available</label>
+            <select id="workoutEquipment">
+              <option>Select equipment</option>
+              <option>No Equipment</option>
+              <option>Basic Home</option>
+              <option>Gym Available</option>
+            </select>
+          </div>
+
+          <button class="primary-btn" id="btnGenerateWorkout">
+            <i class="fa-solid fa-dumbbell"></i>
+            <span>Generate Workout Plan</span>
+          </button>
+
+          <textarea id="workoutResult" class="result-area" placeholder="Your workout plan will appear here..."></textarea>
+        </div>
+      </section>
+       <!-- ADVANCED GENERATOR -->
+  <section id="advanced" class="page">
+   <header class="page-header">
+    <h1 class="page-title">⚡ Advanced Workout + Diet Generator (Team Module)</h1>
+    <p class="page-subtitle">Fill the fields below to generate a combined fitness plan:</p>
+   </header>
+
+   <div class="card form-card">
+
+    <div class="form-group">
+      <label>Age</label>
+      <input type="number" id="adv_age" />
+    </div>
+
+    <div class="form-group">
+      <label>Gender</label>
+      <select id="adv_gender">
+        <option value="">Select gender</option>
+        <option value="male">male</option>
+        <option value="female">female</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Height (cm)</label>
+      <input type="number" id="adv_height" />
+    </div>
+
+    <div class="form-group">
+      <label>Weight (kg)</label>
+      <input type="number" id="adv_weight" />
+    </div>
+
+    <div class="form-group">
+      <label>Goal</label>
+      <select id="adv_goal">
+        <option value="">Select</option>
+        <option value="weight loss">weight loss</option>
+        <option value="muscle gain">muscle gain</option>
+        <option value="maintenance">maintenance</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Workout Location</label>
+      <select id="adv_location">
+        <option>home</option>
+        <option>gym</option>
+      </select>
+    </div>
+
+    <div class="form-group full">
+      <label>Workout Days per Week</label>
+      <input type="range" id="adv_days" min="1" max="6" value="1" />
+      <span id="adv_days_value" style="color: #a5b4fc;">1</span>
+    </div>
+
+    <div class="form-group">
+      <label>Experience Level</label>
+      <select id="adv_experience">
+        <option value="beginner">beginner</option>
+        <option value="intermediate">intermediate</option>
+        <option value="advanced">advanced</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Activity Level</label>
+      <select id="adv_activity">
+        <option value="sedentary">sedentary</option>
+        <option value="lightly active">lightly active</option>
+        <option value="moderately active">moderately active</option>
+        <option value="very active">very active</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Food Preference</label>
+      <select id="adv_food">
+        <option value="veg">veg</option>
+        <option value="non-vegetarian">non-vegetarian</option>
+        <option value="vegan">vegan</option>
+      </select>
+    </div>
+
+    <button class="primary-btn" id="btnAdvGenerate">Generate Advanced Fitness Plan</button>
+
+  </div>
+
+  <div class="card" id="adv_output" style="display:none;">
+    <h2 class="section-title">🏋️ Workout Plan</h2>
+    <pre id="adv_workout_json" class="result-area"></pre>
+
+    <h2 class="section-title">🍽 Diet Plan</h2>
+    <pre id="adv_diet_json" class="result-area"></pre>
+  </div>
+
+ </section>
+    <!-- AI COACH RECOMMENDATION -->
+ <section id="recommendation" class="page">
+     <header class="page-header">
+       <h1 class="page-title">😎 AI Coach Recommendation</h1>
+     </header>
+
+     <div class="card form-card">
+        <button class="primary-btn" id="btnGetRecommendation">Get AI Recommendation</button>
+     </div>
+
+     <div class="card" id="rec_output" style="display:none;">
+       <h2>Your Personalized AI Advice:</h2>
+     <div id="rec_text" style="margin-top:10px; line-height:1.6;"></div>
+     </div>
+  </section>
+
+      <!-- CALORIES -->
+      <section id="calories" class="page">
+        <header class="page-header">
+          <h1 class="page-title">Calorie Tracker</h1>
+          <p class="page-subtitle">Track your daily food intake</p>
+        </header>
+
+        <div class="card form-card">
+          <div class="calorie-input-wrapper">
+            <input
+              id="calorieInput"
+              type="text"
+              placeholder="Enter food item (e.g., 'apple', 'chicken breast')"
+            />
+            <button class="circle-btn" id="btnAddFood">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+            <button class="circle-btn">
+              <i class="fa-solid fa-microphone"></i>
+            </button>
+          </div>
+
+          <div class="calorie-summary">
+            <p>Total: <span id="calorieTotal">0</span> kcal</p>
+          </div>
+
+          <ul id="calorieList" class="calorie-list"></ul>
+        </div>
+      </section>
+
+      <!-- AI COACH -->
+      <section id="coach" class="page">
+        <header class="page-header">
+          <h1 class="page-title">AI Fitness Coach</h1>
+          <p class="page-subtitle">Chat with your personal AI trainer</p>
+        </header>
+
+        <div class="card chat-card">
+          <div id="chatMessages" class="chat-messages">
+            <div class="msg bot">
+              <div class="msg-content">
+                Hello! I'm your AI fitness coach. How can I help you today? 💪
+              </div>
+              <div class="msg-meta">19:44:12</div>
+            </div>
+          </div>
+
+          <div class="chat-input-row">
+            <input
+              type="text"
+              id="chatInput"
+              placeholder="Ask me anything about fitness, nutrition, or workouts..."
+            />
+            <button class="circle-btn" id="chatSendBtn">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- HISTORY -->
+      <section id="history" class="page">
+        <header class="page-header">
+          <h1 class="page-title">History &amp; Analytics</h1>
+          <p class="page-subtitle">Track your fitness journey</p>
+        </header>
+
+        <div class="card history-controls">
+           <button id="btnDownloadPDF" class="secondary-btn">
+           <i class="fa-solid fa-file-arrow-down"></i>
+              Download PDF
+         </button>
+         <button id="btnSaveSummary" class="primary-btn">
+          <i class="fa-solid fa-floppy-disk"></i>
+           Save Today's Summary
+         </button>
+       </div>
+
+        <div class="card">
+          <h2 class="section-title">Weekly Calorie Trend</h2>
+          <canvas id="calorieChart" height="120"></canvas>
+       </div>
+
+        <div class="card">
+          <h2 class="section-title">Activity History</h2>
+
+          <!-- 🔥 FIX: This is REQUIRED (JS yahi target karta hai) -->
+         <div id="historyList"></div>
+
+         <!-- ❗ IMPORTANT:
+         Purane static items hata diye gaye, warna JS crash hota tha.
+         Ab tumhara data automatically localStorage se yahan render hoga.
+         -->
+        </div>
+     </section>
+
+
+    </main>
+  </div>
+
+  <!-- Chart.js for history graph -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
