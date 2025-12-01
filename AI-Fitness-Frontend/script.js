@@ -38,7 +38,7 @@ let calorieChart = null;
 
 // =================== API BASE URL =================== //
 // Change this to your backend URL + port
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://ai-diet-fitness-assistant.onrender.com";
 
 function persistState() {
   localStorage.setItem("latestDietPlan", JSON.stringify(latestDietPlan));
