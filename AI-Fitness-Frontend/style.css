@@ -801,3 +801,180 @@ body {
   color: #888;
   font-style: italic;
 }
+
+/* =========================================
+   PROFESSIONAL DIET PLAN STYLES
+   ========================================= */
+
+/* Container & Animation */
+.diet-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 1. Nutrition Dashboard (Top) --- */
+.diet-summary-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.summary-header {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary-header i {
+  color: #818cf8;
+}
+
+.macros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 12px;
+}
+
+.macro-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  border: 1px solid transparent;
+  transition: transform 0.2s;
+}
+
+.macro-box:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Color Coding for Macros */
+.macro-box.cal { border-color: rgba(248, 113, 113, 0.3); } /* Red - Cal */
+.macro-box.pro { border-color: rgba(52, 211, 153, 0.3); } /* Green - Protein */
+.macro-box.carb { border-color: rgba(96, 165, 250, 0.3); } /* Blue - Carb */
+.macro-box.fat { border-color: rgba(251, 191, 36, 0.3); } /* Yellow - Fat */
+
+.macro-val {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.macro-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+/* --- 2. Days Grid Layout --- */
+.days-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* --- 3. Day Card --- */
+.diet-day-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.diet-day-card:hover {
+  border-color: rgba(129, 140, 248, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.day-badge {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  color: white;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.meals-list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --- 4. Meal Item --- */
+.meal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.meal-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.meal-icon-box {
+  width: 36px;
+  height: 36px;
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.meal-content {
+  flex: 1;
+}
+
+.meal-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #cbd5e1; /* Light grey text */
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.meal-desc {
+  font-size: 0.95rem;
+  color: #e2e8f0; /* White-ish text */
+  line-height: 1.4;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+  .days-grid-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .macro-val { font-size: 1rem; }
+}

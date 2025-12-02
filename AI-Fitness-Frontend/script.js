@@ -47,80 +47,142 @@ let calorieChart = null;
 // Change this to your backend URL + port
 const API_BASE = "https://ai-diet-fitness-assistant.onrender.com";
 
+/* =========================================
+   NEW PROFESSIONAL DIET RENDERER (With Emojis)
+   ========================================= */
 function renderDietPlanPretty(plan) {
   if (!plan || typeof plan !== "object") {
-    return `<pre>${escapeHtml(JSON.stringify(plan, null, 2))}</pre>`;
+    return `<div class="error-box">⚠️ Invalid Data Format</div>`;
   }
 
-  // 1. Flexible Key Access (Case insensitive helper)
-  const getVal = (obj, key) => obj[key] || obj[key.toLowerCase()] || obj[key.toUpperCase()];
+  // --- Helper: Safe Value Fetcher ---
+  const getVal = (obj, key) => {
+    if (!obj) return undefined;
+    const foundKey = Object.keys(obj).find(k => k.toLowerCase() === key.toLowerCase());
+    return foundKey ? obj[foundKey] : undefined;
+  };
 
+  let html = `<div class="diet-container animate-fade-in">`;
+
+  // --- 1. NUTRITION SUMMARY (Top Dashboard) ---
   const calories = getVal(plan, "Calories") || getVal(plan, "calories");
-  const maintenance = plan["Maintenance Calories"] || plan.maintenance_calories;
-  const macros = getVal(plan, "Macros") || getVal(plan, "macros") || {};
+  const macros = getVal(plan, "Macros") || getVal(plan, "macros");
   
-  // Diet plan object nikalo
-  const dietPlanObj = getVal(plan, "Diet Plan") || getVal(plan, "diet_plan") || plan;
-
-  let html = "";
-
-  // --- OVERVIEW SECTION ---
-  html += `<div class="plan-section-title">Overview</div>`;
-  html += `<div style="margin-bottom:10px;">`;
-
-  if (calories) html += `<span class="plan-tag">🔥 Target: <strong>${calories}</strong> kcal</span>`;
-  if (maintenance) html += `<span class="plan-tag">⚖ Maintenance: <strong>${maintenance}</strong> kcal</span>`;
-  
-  // Macros Display
-  const prot = getVal(macros, "Protein (g)") || getVal(macros, "protein") || "-";
-  const carb = getVal(macros, "Carbs (g)") || getVal(macros, "carbs") || "-";
-  const fats = getVal(macros, "Fats (g)") || getVal(macros, "fats") || "-";
-
-  if (prot !== "-") {
-    html += `<span class="plan-tag">🍽 Macros: P ${prot}g · C ${carb}g · F ${fats}g</span>`;
-  }
-  html += `</div>`;
-
-  // --- MEALS SECTION ---
-  // Standard keys list check karenge (Capital aur Small dono)
-  const mealKeys = ["Breakfast", "Lunch", "Dinner", "Snacks", "Pre-Workout", "Post-Workout"];
-
-  mealKeys.forEach((meal) => {
-    // Helper se value nikalo (taaki 'breakfast' aur 'Breakfast' dono chalein)
-    const value = getVal(dietPlanObj, meal); 
-    
-    if (!value) return; // Agar khali hai toh skip
-
-    html += `<div class="plan-meal">
-      <div class="plan-meal-title">${meal}</div>`;
-
-    if (Array.isArray(value)) {
-      html += `<ul class="plan-list">`;
-      value.forEach((item) => {
-        html += `<li>${escapeHtml(item)}</li>`;
-      });
-      html += `</ul>`;
-    } else {
-      html += `<div>${escapeHtml(String(value))}</div>`;
+  if (calories || macros) {
+    html += `<div class="diet-summary-card">
+      <div class="summary-header">
+        <i class="fa-solid fa-chart-pie"></i> Nutrition Targets
+      </div>
+      <div class="macros-grid">`;
+      
+    // 🔥 CALORIES BOX
+    if (calories) {
+      html += `<div class="macro-box cal">
+        <div class="macro-val">${calories}</div>
+        <div class="macro-label">🔥 Kcal</div>
+      </div>`;
     }
 
-    html += `</div>`;
-  });
-
-  // Agar standard keys nahi mile, toh baki keys print kardo (Fallback)
-  Object.keys(dietPlanObj).forEach(key => {
-      // Jo hum already print kar chuke hain unhe ignore karein
-      if ([...mealKeys, "Calories", "Macros", "Maintenance Calories", "diet_plan"].some(k => k.toLowerCase() === key.toLowerCase())) return;
+    if (macros) {
+      const p = getVal(macros, "Protein (g)") || getVal(macros, "protein") || "-";
+      const c = getVal(macros, "Carbs (g)") || getVal(macros, "carbs") || "-";
+      const f = getVal(macros, "Fats (g)") || getVal(macros, "fats") || "-";
       
-      const val = dietPlanObj[key];
-      if(typeof val === 'object' && val !== null && !Array.isArray(val)) return; // Nested objects ko skip karein
+      // 🥩 PROTEIN BOX
+      if(p !== '-') html += `<div class="macro-box pro"><div class="macro-val">${p}g</div><div class="macro-label">🥩 Protein</div></div>`;
+      
+      // 🍞 CARBS BOX
+      if(c !== '-') html += `<div class="macro-box carb"><div class="macro-val">${c}g</div><div class="macro-label">🍞 Carbs</div></div>`;
+      
+      // 🥑 FATS BOX
+      if(f !== '-') html += `<div class="macro-box fat"><div class="macro-val">${f}g</div><div class="macro-label">🥑 Fats</div></div>`;
+    }
+    html += `</div></div>`; // End Summary
+  }
 
-      html += `<div class="plan-meal">
-        <div class="plan-meal-title">${escapeHtml(key)}</div>
-        <div>${escapeHtml(String(val))}</div>
+  // --- 2. DETECT DAYS (Single or Multi) ---
+  const dietPlanObj = getVal(plan, "Diet Plan") || getVal(plan, "diet_plan") || plan;
+  const keys = Object.keys(dietPlanObj);
+  const dayKeys = keys.filter(k => k.toLowerCase().includes("day") || k.toLowerCase().includes("monday"));
+
+  // --- Helper: Render Meals List ---
+  const renderMeals = (mealsObj) => {
+    let mealHtml = `<div class="meals-list">`;
+    const icons = {
+      "breakfast": "fa-mug-hot",
+      "lunch": "fa-bowl-rice",
+      "dinner": "fa-utensils",
+      "snacks": "fa-apple-whole",
+      "pre-workout": "fa-bolt",
+      "post-workout": "fa-glass-water",
+      "mid-morning": "fa-sun"
+    };
+
+    // Standard Ordering
+    const order = ["Breakfast", "Mid-Morning", "Lunch", "Evening Snack", "Snacks", "Dinner", "Pre-Workout", "Post-Workout"];
+    
+    // Print in order
+    order.forEach(type => {
+      const val = getVal(mealsObj, type);
+      if(val) {
+        const iconClass = icons[type.toLowerCase()] || "fa-circle-dot";
+        mealHtml += `
+        <div class="meal-item">
+          <div class="meal-icon-box"><i class="fa-solid ${iconClass}"></i></div>
+          <div class="meal-content">
+            <div class="meal-title">${type}</div>
+            <div class="meal-desc">${escapeHtml(Array.isArray(val) ? val.join(", ") : val)}</div>
+          </div>
+        </div>`;
+      }
+    });
+
+    // Print remaining keys
+    Object.keys(mealsObj).forEach(k => {
+      if(order.some(o => o.toLowerCase() === k.toLowerCase())) return; // skip already done
+      if(["calories", "macros"].includes(k.toLowerCase())) return; // skip metadata
+
+      const val = mealsObj[k];
+      if(typeof val === 'string' || Array.isArray(val)) {
+        mealHtml += `
+        <div class="meal-item">
+          <div class="meal-icon-box"><i class="fa-solid fa-star"></i></div>
+          <div class="meal-content">
+            <div class="meal-title">${k}</div>
+            <div class="meal-desc">${escapeHtml(Array.isArray(val) ? val.join(", ") : val)}</div>
+          </div>
+        </div>`;
+      }
+    });
+
+    mealHtml += `</div>`;
+    return mealHtml;
+  };
+
+  // --- 3. RENDER CARDS ---
+  html += `<div class="days-grid-layout">`;
+
+  if (dayKeys.length > 0) {
+    // Sort Days
+    dayKeys.sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
+
+    dayKeys.forEach(day => {
+      html += `
+      <div class="diet-day-card">
+        <div class="day-badge">${day}</div>
+        ${renderMeals(dietPlanObj[day])}
       </div>`;
-  });
+    });
+  } else {
+    // Single Day View
+    html += `
+    <div class="diet-day-card single-mode">
+      <div class="day-badge">Daily Plan</div>
+      ${renderMeals(dietPlanObj)}
+    </div>`;
+  }
 
+  html += `</div></div>`; // End container
   return html;
 }
 
