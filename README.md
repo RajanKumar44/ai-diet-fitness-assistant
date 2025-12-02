@@ -4,6 +4,7 @@ A modern full-stack AI-driven fitness assistant that helps users generate person
 Built with HTML, CSS, JavaScript, FastAPI, Python, Groq API, and Chart.js, this project provides a sleek dashboard interface along with persistent user data storage.
 
 🚀 Features
+
 🔹 1. AI Diet Plan Generator
 
 Personalized diet plans based on user input
@@ -104,6 +105,7 @@ Browser LocalStorage
 Exportable PDF files
 
 📁 Project Structure
+
 ai-fitness-assistant/
 ├── backend/
 │   ├── app.py                   # FastAPI application
@@ -120,7 +122,9 @@ ai-fitness-assistant/
 │
 └── README.md                    # Project documentation
 
+
 ⚙️ Getting Started
+
 1. Clone the repository
 git clone <your-repo-url>
 cd ai-fitness-assistant
@@ -139,9 +143,9 @@ pip install -r requirements.txt
 uvicorn app:app --reload --port 8000
 
 
-Your backend is now running at:
+The backend is now running at:
 
-🔗 http://localhost:8000
+🔗 https://ai-diet-fitness-assistant.onrender.com
 
 📘 API Docs → http://localhost:8000/docs
 
@@ -162,6 +166,7 @@ For live server:
 Right Click → Open with Live Server
 
 📜 API Endpoints
+
 🔥 Diet Plan
 POST /diet
 
@@ -236,6 +241,7 @@ Advanced structured layout
 Mobile responsive design
 
 🧠 AI Powered Modules
+
 Powered by Groq LLM
 
 Natural language responses
@@ -247,6 +253,7 @@ Smart calorie estimation
 Motivational AI assistance
 
 📦 Deployment
+
 Backend:
 uvicorn app:app --host 0.0.0.0 --port 8000
 
@@ -254,13 +261,10 @@ Frontend:
 
 Serve using any static hosting:
 
-Netlify
-
 GitHub Pages
 
 Vercel (static mode)
 
-Nginx
 
 🔒 Security Notes
 
@@ -273,6 +277,7 @@ Optional JWT login can be added
 Minimal backend storage for safety
 
 🛠 Future Improvements
+
 Feature	Status
 User login & authentication	🔄 In progress
 Cloud database for user history	🔄 Planned
