@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI ,Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from typing import Any, Dict, List
@@ -214,7 +214,7 @@ def chat_api(body: Dict[str, Any]) -> Dict[str, Any]:
 # ------------------------
 from fastapi import Request
 @app.post("/export-summary")
-def export_summary(body: Dict[str, Any]):
+def export_summary(request:Request ,body: Dict[str, Any]):
     username = body.get("username", "User")
     calories = body.get("calories", 0)
     diet_plan = body.get("diet_plan", {})
@@ -260,8 +260,10 @@ def export_summary(body: Dict[str, Any]):
     filename = os.path.basename(pdf_path)
 
      # ⭐ NEW: Auto-detect base URL (works on Render + Local)
-    base_url = str(Request.base_url).rstrip("/")
+    base_url = str(request.base_url).rstrip("/")
 
+    pdf_url = f"{base_url}/static/{filename}"
+    
     return {
         "success": True,
         "pdf_url": f"{base_url}/static/{filename}",   # ⭐ FIXED LINE
