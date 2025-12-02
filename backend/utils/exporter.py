@@ -1,6 +1,9 @@
 import os
 import textwrap
 import json
+import ast
+import re
+import time
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase.ttfonts import TTFont
@@ -8,346 +11,306 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.lib import colors
 
 # ---------------------------------------------------
-# FONT REGISTRATION (Unicode)
+# 1. FONTS & COLORS
 # ---------------------------------------------------
 FONT_PATH = "utils/fonts/NotoSans-Regular.ttf"
 try:
     pdfmetrics.registerFont(TTFont("Noto", FONT_PATH))
     DEFAULT_FONT = "Noto"
+    BOLD_FONT = "Noto" 
 except Exception:
-    # Fallback in case font missing
     DEFAULT_FONT = "Helvetica"
+    BOLD_FONT = "Helvetica-Bold"
 
+# Professional Theme
+COL_PRIMARY = colors.HexColor("#1565C0")   # Deep Blue
+COL_ACCENT = colors.HexColor("#42A5F5")    # Light Blue
+COL_TABLE_HEAD = colors.HexColor("#1976D2")# Table Header Blue
+COL_ROW_EVEN = colors.HexColor("#F1F8FF")  # Very Light Blue Stripe
+COL_TEXT = colors.HexColor("#212121")      # Dark Grey Text
 
 # ---------------------------------------------------
-# PREMIUM STRUCTURED PDF GENERATOR
+# 2. SMART DATA PARSER
+# ---------------------------------------------------
+def smart_parse(data):
+    """Recursively parses data to ensure it's a valid Dictionary."""
+    if not data: return {}
+    if isinstance(data, dict): return data
+    
+    if isinstance(data, str):
+        data = data.strip()
+        try: return json.loads(data)
+        except: pass
+        try: return ast.literal_eval(data)
+        except: pass
+            
+    return {}
+
+def clean_text(text):
+    """Cleans list strings like ['Oats', 'Milk'] -> 'Oats, Milk'"""
+    if isinstance(text, list):
+        return ", ".join([str(x) for x in text])
+    return str(text).replace("[", "").replace("]", "").replace("'", "").strip()
+
+def extract_day_number(key):
+    nums = re.findall(r'\d+', str(key))
+    return int(nums[0]) if nums else 999
+
+# ---------------------------------------------------
+# 3. PDF GENERATOR
 # ---------------------------------------------------
 def create_summary_pdf(username, calories, diet_plan, workout_plan, ai_advice, chat_history):
-
-    # Create folder
     os.makedirs("exports", exist_ok=True)
-    filename = f"{username}_Fitness_Report.pdf".replace(" ", "_")
+    
+    # Unique Filename to prevent Caching
+    timestamp = int(time.time())
+    safe_name = str(username).replace(" ", "_")
+    filename = f"{safe_name}_Fitness_Report_{timestamp}.pdf"
     filepath = os.path.join("exports", filename)
 
     c = canvas.Canvas(filepath, pagesize=A4)
     width, height = A4
     y = height - 50
 
-    # ---------------------------------------------------
-    # Helper Functions
-    # ---------------------------------------------------
-    def header(title):
-        nonlocal y
-        c.setFont(DEFAULT_FONT, 18)
-        c.setFillColor(colors.HexColor("#00E5FF"))
-        c.drawString(40, y, title)
-        y -= 12
-
-        c.setLineWidth(2)
-        c.setStrokeColor(colors.HexColor("#00A8E8"))
-        c.line(40, y, width - 40, y)
-        y -= 25
-
-        c.setFillColor(colors.black)
-
-    def write_paragraph(text, wrap=75, font_size=11):
-        nonlocal y
-        if not text:
-            return
-        c.setFont(DEFAULT_FONT, font_size)
-        lines = textwrap.wrap(str(text), wrap)
-        for line in lines:
-            c.drawString(40, y, line)
-            y -= 15
-            if y < 80:
-                c.showPage()
-                reset_page()
-        y -= 10
-
     def reset_page():
         nonlocal y
+        c.showPage()
         y = height - 50
-        c.setFont(DEFAULT_FONT, 11)
+        draw_header()
 
-    def draw_table(title, table_data, col_widths):
+    def draw_header():
+        # Banner
+        c.setFillColor(COL_PRIMARY)
+        c.rect(0, height - 85, width, 85, fill=1, stroke=0)
+        # Text
+        c.setFont(BOLD_FONT, 22)
+        c.setFillColor(colors.white)
+        c.drawString(40, height - 45, "AI Fitness & Diet Report")
+        c.setFont(DEFAULT_FONT, 12)
+        c.setFillColor(colors.HexColor("#BBDEFB"))
+        c.drawString(40, height - 65, f"User: {username}  |  Target: {calories} kcal")
+        c.setFillColor(colors.black)
+
+    # Init Header
+    y = height - 100
+    draw_header()
+
+    def draw_section_title(title, icon=""):
         nonlocal y
-        if not table_data:
-            return
+        if y < 100: reset_page()
+        y -= 35
+        c.setFont(BOLD_FONT, 16)
+        c.setFillColor(COL_PRIMARY)
+        c.drawString(40, y, f"{icon}  {title}")
+        c.setStrokeColor(COL_ACCENT)
+        c.setLineWidth(2)
+        c.line(40, y - 8, width - 40, y - 8)
+        y -= 25
 
-        if title:
-            header(title)
+    def draw_table(headers, data, col_widths):
+        nonlocal y
+        if not data: return
 
-        c.setFont(DEFAULT_FONT, 11)
-        row_height = 18
+        # Header
+        if y < 60: reset_page()
+        c.setFillColor(COL_TABLE_HEAD)
+        c.rect(40, y - 22, sum(col_widths), 22, fill=1, stroke=0)
+        c.setFillColor(colors.white)
+        c.setFont(BOLD_FONT, 10)
+        
+        curr_x = 45
+        for i, h in enumerate(headers):
+            c.drawString(curr_x, y - 16, h)
+            curr_x += col_widths[i]
+        y -= 22
 
-        for row in table_data:
-            x_pos = 40
+        # Rows
+        c.setFont(DEFAULT_FONT, 10)
+        c.setFillColor(COL_TEXT)
+        
+        for idx, row in enumerate(data):
+            # Calculate height
+            max_lines = 1
+            wrapped_row = []
             for i, cell in enumerate(row):
-                c.drawString(x_pos, y, str(cell))
-                x_pos += col_widths[i]
+                lines = textwrap.wrap(str(cell), width=int(col_widths[i] / 6))
+                wrapped_row.append(lines)
+                max_lines = max(max_lines, len(lines))
+            
+            row_height = (max_lines * 14) + 10
+
+            if y - row_height < 50:
+                reset_page()
+                y -= 22
+
+            # Background
+            if idx % 2 == 0:
+                c.setFillColor(COL_ROW_EVEN)
+                c.rect(40, y - row_height, sum(col_widths), row_height, fill=1, stroke=0)
+                c.setFillColor(COL_TEXT)
+
+            # Draw Text
+            curr_x = 45
+            for i, lines in enumerate(wrapped_row):
+                text_y = y - 14
+                for line in lines:
+                    c.drawString(curr_x, text_y, line)
+                    text_y -= 14
+                curr_x += col_widths[i]
+
+            # Border
+            c.setStrokeColor(colors.lightgrey)
+            c.setLineWidth(0.5)
+            c.rect(40, y - row_height, sum(col_widths), row_height, fill=0, stroke=1)
+
             y -= row_height
 
-            if y < 80:
-                c.showPage()
-                reset_page()
+    # ==========================
+    # 1. WORKOUT SECTION
+    # ==========================
+    workout_obj = smart_parse(workout_plan)
+    draw_section_title("Workout Routine", "💪")
+
+    w_plan = {}
+    if "Workout Plan" in workout_obj: w_plan = workout_obj["Workout Plan"]
+    elif any("Day" in str(k) for k in workout_obj.keys()): w_plan = workout_obj
+    
+    if w_plan and isinstance(w_plan, dict):
+        days = sorted(w_plan.keys(), key=extract_day_number)
+        for day in days:
+            if y < 80: reset_page()
+            c.setFont(BOLD_FONT, 12)
+            c.setFillColor(colors.darkgrey)
+            c.drawString(40, y, f"► {day}")
+            y -= 20
+            
+            exercises = w_plan[day]
+            if isinstance(exercises, dict): exercises = exercises.get("Exercises", [])
+            
+            t_data = []
+            if isinstance(exercises, list):
+                for ex in exercises:
+                    if isinstance(ex, dict):
+                        t_data.append([ex.get("name", "-"), str(ex.get("sets", "-")), str(ex.get("reps", "-"))])
+                    elif isinstance(ex, str):
+                        t_data.append([ex, "-", "-"])
+            
+            if t_data:
+                draw_table(["Exercise", "Sets", "Reps"], t_data, [250, 100, 100])
+                y -= 10
+    else:
+        c.setFont(DEFAULT_FONT, 10)
+        c.drawString(40, y, "No structured workout plan found.")
         y -= 20
 
-    # ------------- AI Recommendation Markdown Renderer -------------
-    def render_markdown(md_text):
-        nonlocal y
-        if not md_text:
-            return
+    # ==========================
+    # 2. DIET SECTION (FIXED)
+    # ==========================
+    diet_obj = smart_parse(diet_plan)
+    draw_section_title("Nutrition & Diet Plan", "🥗")
 
-        c.setFont(DEFAULT_FONT, 12)
-        lines = str(md_text).split("\n")
-        indent = 40
+    # A. Macros
+    macros = diet_obj.get("Macros") or diet_obj.get("macros")
+    if macros and isinstance(macros, dict):
+        m_data = [[k, f"{v}g"] for k, v in macros.items() if isinstance(v, (int, float, str))]
+        if m_data:
+            c.setFont(BOLD_FONT, 11)
+            c.drawString(40, y, "Daily Nutrition Targets:")
+            y -= 20
+            draw_table(["Nutrient", "Amount"], m_data, [200, 150])
+            y -= 15
 
+    # B. Meals (Universal Fix)
+    # Attempt to unwrap "Diet Plan" if it exists, otherwise use root object
+    dp = diet_obj.get("Diet Plan") or diet_obj.get("diet_plan") or diet_obj
+    
+    # Filter out metadata keys
+    ignore_keys = ["Calories", "Macros", "Maintenance Calories", "target_calories", "macros"]
+    content_keys = [k for k in dp.keys() if isinstance(k, str) and k not in ignore_keys]
+
+    if content_keys:
+        # Check if Multi-Day (e.g., "Day 1", "Day 2")
+        day_keys = [k for k in content_keys if "day" in k.lower()]
+        
+        if day_keys:
+            # === Multi-Day Table ===
+            day_keys.sort(key=extract_day_number)
+            for day in day_keys:
+                if y < 80: reset_page()
+                
+                # Day Header
+                c.setFont(BOLD_FONT, 12)
+                c.setFillColor(colors.darkgrey)
+                c.drawString(40, y, f"► {day}")
+                y -= 20
+                
+                # Get Meals for that day
+                day_meals = dp[day]
+                if isinstance(day_meals, dict):
+                    # Sort meals naturally
+                    order = ["Breakfast", "Mid-Morning", "Lunch", "Snacks", "Dinner", "Pre-Workout"]
+                    t_data = []
+                    
+                    # Add Ordered Items
+                    for m in order:
+                        if m in day_meals:
+                            t_data.append([m, clean_text(day_meals[m])])
+                    
+                    # Add Others
+                    for k, v in day_meals.items():
+                        if k not in order:
+                            t_data.append([k, clean_text(v)])
+
+                    draw_table(["Meal", "Recommended Food"], t_data, [130, 360])
+                y -= 10
+        else:
+            # === Single Day Table ===
+            order = ["Breakfast", "Mid-Morning", "Lunch", "Snacks", "Dinner", "Pre-Workout"]
+            t_data = []
+            
+            # Add Ordered
+            for m in order:
+                for k in content_keys:
+                    if k.lower() == m.lower():
+                        t_data.append([k, clean_text(dp[k])])
+            
+            # Add Remaining
+            printed_keys = [r[0] for r in t_data]
+            for k in content_keys:
+                if k not in printed_keys:
+                     t_data.append([k, clean_text(dp[k])])
+            
+            if t_data:
+                draw_table(["Meal", "Recommended Food"], t_data, [130, 360])
+            else:
+                c.setFont(DEFAULT_FONT, 10)
+                c.drawString(40, y, "No meals listed.")
+                y -= 20
+    else:
+        # If no valid keys found (Fallback)
+        c.setFont(DEFAULT_FONT, 10)
+        c.drawString(40, y, "No diet details available.")
+        y -= 20
+
+    # ==========================
+    # 3. AI ADVICE
+    # ==========================
+    if ai_advice:
+        draw_section_title("Coach Advice", "🤖")
+        lines = str(ai_advice).split('\n')
+        c.setFont(DEFAULT_FONT, 10)
+        c.setFillColor(COL_TEXT)
+        
         for line in lines:
             line = line.strip()
-            if not line:
-                continue
-
-            # ---- Header (Markdown ### or bold without colon) ----
-            if line.startswith("###") or (line.startswith("**") and line.endswith("**") and ":" not in line):
-                title = line.replace("#", "").replace("**", "").strip()
-                c.setFont(DEFAULT_FONT, 14)
-                c.drawString(40, y, title)
-                y -= 20
-                c.setFont(DEFAULT_FONT, 12)
-                continue
-
-            # ---- Bullet Points ----
-            if line.startswith("- ") or line.startswith("* "):
-                bullet = "• "
-                text = line[2:]
-                c.drawString(indent, y, bullet + text)
-                y -= 15
-                continue
-
-            # ---- Sub-bullets ----
-            if line.startswith("+ "):
-                bullet = "  ◦ "
-                text = line[2:]
-                c.drawString(indent + 20, y, bullet + text)
-                y -= 15
-                continue
-
-            # ---- Normal paragraph ----
-            wrapped = textwrap.wrap(line, 70)
+            if not line: continue
+            
+            wrapped = textwrap.wrap(line, 90)
             for w in wrapped:
+                if y < 40: reset_page()
                 c.drawString(40, y, w)
-                y -= 15
-                if y < 80:
-                    c.showPage()
-                    reset_page()
-            y -= 5
-
-    # ---------------------------------------------------
-    # START DOCUMENT
-    # ---------------------------------------------------
-    header("AI Diet & Fitness Assistant — Premium Report")
-    write_paragraph(f"User: {username}")
-    write_paragraph(f"Today's Calories: {calories} kcal")
-
-    # ---------------------------------------------------
-    # WORKOUT TABLE
-    # ---------------------------------------------------
-    header("💪 Workout Plan")
-
-    # workout_plan can be dict or JSON string
-    workout_obj = workout_plan
-    if isinstance(workout_plan, str):
-        try:
-            workout_obj = json.loads(workout_plan)
-        except Exception:
-            workout_obj = workout_plan  # keep raw
-
-    if isinstance(workout_obj, dict) and "Workout Plan" in workout_obj:
-        plan_dict = workout_obj.get("Workout Plan", {})
-
-        for day, data in plan_dict.items():
-            write_paragraph(f"► {day}", font_size=13)
-
-            exercises = []
-            if isinstance(data, dict):
-                exercises = data.get("Exercises", [])
-            elif isinstance(data, list):
-                exercises = data
-
-            table = [["Exercise", "Sets", "Reps"]]
-
-            for ex in exercises:
-                if isinstance(ex, dict):
-                    table.append([
-                        ex.get("name", ""),
-                        ex.get("sets", ""),
-                        ex.get("reps", ""),
-                    ])
-                else:
-                    # fallback if string
-                    table.append([str(ex), "", ""])
-
-            draw_table("", table, [250, 100, 100])
-
-        notes = workout_obj.get("Workout Notes") or workout_obj.get("notes") or ""
-        if notes:
-            write_paragraph(f"Notes: {notes}", wrap=90)
-    else:
-        # Fallback: just dump text
-        write_paragraph(str(workout_plan), wrap=90)
-
-    # ---------------------------------------------------
-    # DIET PLAN TABLE
-    # ---------------------------------------------------
-    header("🍽 Diet Plan")
-
-    diet_obj = diet_plan
-    if isinstance(diet_plan, str):
-        try:
-            diet_obj = json.loads(diet_plan)
-        except Exception:
-            diet_obj = diet_plan
-
-    if isinstance(diet_obj, dict):
-        macros = diet_obj.get("Macros") or diet_obj.get("macros")
-
-        if isinstance(macros, dict):
-            macro_table = [
-                ["Protein (g)", macros.get("Protein (g)") or macros.get("protein") or ""],
-                ["Carbs (g)", macros.get("Carbs (g)") or macros.get("carbs") or ""],
-                ["Fats (g)", macros.get("Fats (g)") or macros.get("fats") or ""],
-            ]
-            draw_table("Daily Macros", macro_table, [200, 200])
-
-        dp = diet_obj.get("Diet Plan") or diet_obj.get("diet_plan")
-        if isinstance(dp, dict):
-            diet_table = [["Meal", "Food"]]
-            if "Breakfast" in dp:
-                diet_table.append(["Breakfast", dp["Breakfast"]])
-            if "Lunch" in dp:
-                diet_table.append(["Lunch", dp["Lunch"]])
-            if "Dinner" in dp:
-                diet_table.append(["Dinner", dp["Dinner"]])
-            if "Snacks" in dp:
-                snacks_val = dp["Snacks"]
-                if isinstance(snacks_val, list):
-                    snacks_text = ", ".join(snacks_val)
-                else:
-                    snacks_text = str(snacks_val)
-                diet_table.append(["Snacks", snacks_text])
-
-            draw_table("Meals", diet_table, [150, 300])
-        else:
-            # No structured diet plan, dump string
-            write_paragraph(str(diet_plan), wrap=90)
-    else:
-        write_paragraph(str(diet_plan), wrap=90)
-
-    # ---------------------------------------------------
-    # AI RECOMMENDATION (Premium Formatting)
-    # ---------------------------------------------------
-    header("🤖 AI Recommendation")
-    render_markdown(ai_advice)
-
-    # ---------------------------------------------------
-    # CHAT HISTORY (Premium Formatting)
-    # ---------------------------------------------------
-    header("💬 Chat History")
-
-    # chat_history can be list of dicts, list of strings, or string
-    chat_lines = []
-
-    if isinstance(chat_history, str):
-        chat_lines = chat_history.split("\n")
-    elif isinstance(chat_history, list):
-        # Try to convert to text format
-        for msg in chat_history:
-            if isinstance(msg, dict) and "role" in msg and "content" in msg:
-                role = msg["role"]
-                content = msg["content"]
-                if role == "user":
-                    chat_lines.append(f"you: {content}")
-                elif role == "assistant":
-                    chat_lines.append(f"coach: {content}")
-                else:
-                    chat_lines.append(str(content))
-            else:
-                chat_lines.append(str(msg))
-    else:
-        chat_lines = [str(chat_history)]
-
-    c.setFont(DEFAULT_FONT, 12)
-
-    for line in chat_lines:
-        line = line.strip()
-        if not line:
-            continue
-
-        lower = line.lower()
-
-        # User messages
-        if lower.startswith("you:"):
-            c.setFont(DEFAULT_FONT, 13)
-            c.drawString(40, y, "🧑 You:")
-            y -= 18
-            c.setFont(DEFAULT_FONT, 11)
-            user_msg = line[4:].strip()
-            for part in textwrap.wrap(user_msg, 70):
-                c.drawString(60, y, part)
                 y -= 14
-                if y < 80:
-                    c.showPage()
-                    reset_page()
-            y -= 5
-            continue
+            y -= 2
 
-        # Coach messages
-        if lower.startswith("coach:"):
-            c.setFont(DEFAULT_FONT, 13)
-            c.drawString(40, y, "🤖 Coach:")
-            y -= 18
-            c.setFont(DEFAULT_FONT, 11)
-            coach_msg = line[6:].strip()
-            for part in textwrap.wrap(coach_msg, 70):
-                c.drawString(60, y, part)
-                y -= 14
-                if y < 80:
-                    c.showPage()
-                    reset_page()
-            y -= 5
-            continue
-
-        # Markdown headings inside chat
-        if line.startswith("**") and line.endswith("**"):
-            c.setFont(DEFAULT_FONT, 13)
-            c.drawString(40, y, line.replace("**", ""))
-            y -= 18
-            continue
-
-        # Bullets and sub-bullets
-        if line.startswith("* "):
-            c.setFont(DEFAULT_FONT, 11)
-            c.drawString(60, y, "• " + line[2:])
-            y -= 14
-            continue
-
-        if line.startswith("+ "):
-            c.setFont(DEFAULT_FONT, 11)
-            c.drawString(80, y, "◦ " + line[2:])
-            y -= 14
-            continue
-
-        # Regular wrapped content
-        c.setFont(DEFAULT_FONT, 11)
-        for part in textwrap.wrap(line, 70):
-            c.drawString(40, y, part)
-            y -= 14
-            if y < 80:
-                c.showPage()
-                reset_page()
-
-    # ---------------------------------------------------
-    # END PDF
-    # ---------------------------------------------------
     c.save()
     return filepath
