@@ -219,7 +219,10 @@
             <span>Generate Diet Plan</span>
           </button>
 
-          <textarea id="dietResult" class="result-area" placeholder="Your diet plan will appear here..."></textarea>
+          <div id="dietResult" class="result-area pretty-result">
+            <span class="placeholder-text">Your diet plan will appear here...</span>
+          </div>
+
         </div>
       </section>
 
@@ -255,7 +258,10 @@
             <span>Generate Workout Plan</span>
           </button>
 
-          <textarea id="workoutResult" class="result-area" placeholder="Your workout plan will appear here..."></textarea>
+          <div id="workoutResult" class="result-area      pretty-result">
+           <span class="placeholder-text">Your workout plan will appear here...</span>
+         </div>
+
         </div>
       </section>
        <!-- ADVANCED GENERATOR -->
@@ -349,10 +355,14 @@
 
   <div class="card" id="adv_output" style="display:none;">
     <h2 class="section-title">🏋️ Workout Plan</h2>
-    <pre id="adv_workout_json" class="result-area"></pre>
+    <div id="adv_workout_json" class="result-area pretty-result">
+      <span class="placeholder-text">Your advanced workout plan will appear here...</span>
+   </div>
+
 
     <h2 class="section-title">🍽 Diet Plan</h2>
-    <pre id="adv_diet_json" class="result-area"></pre>
+    <div id="adv_diet_json" class="result-area pretty-result"></div>
+
   </div>
 
  </section>
@@ -475,5 +485,6 @@
   <!-- Chart.js for history graph -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
+  <script src="extract.js"></script>
 </body>
 </html>

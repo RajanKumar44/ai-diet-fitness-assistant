@@ -3,6 +3,13 @@ let latestDietPlan = {};
 let latestWorkoutPlan = {};
 let lastAIAdvice = "";
 let chatHistory = [];
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 
 // ========== SIMPLE MARKDOWN RENDERER (FOR AI TEXT) ========== //
 // This does NOT change any layout. It only converts **bold** and
@@ -39,6 +46,171 @@ let calorieChart = null;
 // =================== API BASE URL =================== //
 // Change this to your backend URL + port
 const API_BASE = "https://ai-diet-fitness-assistant.onrender.com";
+
+function renderDietPlanPretty(plan) {
+  if (!plan || typeof plan !== "object") {
+    return `<pre>${escapeHtml(JSON.stringify(plan, null, 2))}</pre>`;
+  }
+
+  // 1. Flexible Key Access (Case insensitive helper)
+  const getVal = (obj, key) => obj[key] || obj[key.toLowerCase()] || obj[key.toUpperCase()];
+
+  const calories = getVal(plan, "Calories") || getVal(plan, "calories");
+  const maintenance = plan["Maintenance Calories"] || plan.maintenance_calories;
+  const macros = getVal(plan, "Macros") || getVal(plan, "macros") || {};
+  
+  // Diet plan object nikalo
+  const dietPlanObj = getVal(plan, "Diet Plan") || getVal(plan, "diet_plan") || plan;
+
+  let html = "";
+
+  // --- OVERVIEW SECTION ---
+  html += `<div class="plan-section-title">Overview</div>`;
+  html += `<div style="margin-bottom:10px;">`;
+
+  if (calories) html += `<span class="plan-tag">🔥 Target: <strong>${calories}</strong> kcal</span>`;
+  if (maintenance) html += `<span class="plan-tag">⚖ Maintenance: <strong>${maintenance}</strong> kcal</span>`;
+  
+  // Macros Display
+  const prot = getVal(macros, "Protein (g)") || getVal(macros, "protein") || "-";
+  const carb = getVal(macros, "Carbs (g)") || getVal(macros, "carbs") || "-";
+  const fats = getVal(macros, "Fats (g)") || getVal(macros, "fats") || "-";
+
+  if (prot !== "-") {
+    html += `<span class="plan-tag">🍽 Macros: P ${prot}g · C ${carb}g · F ${fats}g</span>`;
+  }
+  html += `</div>`;
+
+  // --- MEALS SECTION ---
+  // Standard keys list check karenge (Capital aur Small dono)
+  const mealKeys = ["Breakfast", "Lunch", "Dinner", "Snacks", "Pre-Workout", "Post-Workout"];
+
+  mealKeys.forEach((meal) => {
+    // Helper se value nikalo (taaki 'breakfast' aur 'Breakfast' dono chalein)
+    const value = getVal(dietPlanObj, meal); 
+    
+    if (!value) return; // Agar khali hai toh skip
+
+    html += `<div class="plan-meal">
+      <div class="plan-meal-title">${meal}</div>`;
+
+    if (Array.isArray(value)) {
+      html += `<ul class="plan-list">`;
+      value.forEach((item) => {
+        html += `<li>${escapeHtml(item)}</li>`;
+      });
+      html += `</ul>`;
+    } else {
+      html += `<div>${escapeHtml(String(value))}</div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  // Agar standard keys nahi mile, toh baki keys print kardo (Fallback)
+  Object.keys(dietPlanObj).forEach(key => {
+      // Jo hum already print kar chuke hain unhe ignore karein
+      if ([...mealKeys, "Calories", "Macros", "Maintenance Calories", "diet_plan"].some(k => k.toLowerCase() === key.toLowerCase())) return;
+      
+      const val = dietPlanObj[key];
+      if(typeof val === 'object' && val !== null && !Array.isArray(val)) return; // Nested objects ko skip karein
+
+      html += `<div class="plan-meal">
+        <div class="plan-meal-title">${escapeHtml(key)}</div>
+        <div>${escapeHtml(String(val))}</div>
+      </div>`;
+  });
+
+  return html;
+}
+
+
+function renderWorkoutPlanPretty(plan) {
+  if (!plan || typeof plan !== "object") {
+    return `<pre>${escapeHtml(JSON.stringify(plan, null, 2))}</pre>`;
+  }
+
+  const overview = plan["Workout Overview"] ?? plan.overview ?? {};
+  const daysPlan = plan["Workout Plan"] ?? plan["Workout Plan "] ?? plan.workout_plan ?? plan;
+
+  let html = "";
+
+  // Overview tags (age, goal, days, location...)
+  if (overview && typeof overview === "object") {
+    html += `<div class="plan-section-title">Overview</div><div style="margin-bottom:10px;">`;
+
+    if (overview.goal) {
+      html += `<span class="plan-tag">🎯 Goal: <strong>${escapeHtml(
+        overview.goal
+      )}</strong></span>`;
+    }
+    if (overview.days_per_week) {
+      html += `<span class="plan-tag">📅 Days: <strong>${
+        overview.days_per_week
+      }/week</strong></span>`;
+    }
+    if (overview.location) {
+      html += `<span class="plan-tag">📍 Location: <strong>${escapeHtml(
+        overview.location
+      )}</strong></span>`;
+    }
+    if (overview.experience) {
+      html += `<span class="plan-tag">💪 Level: <strong>${escapeHtml(
+        overview.experience
+      )}</strong></span>`;
+    }
+    html += `</div>`;
+  }
+
+  // Per-day workouts
+  if (daysPlan && typeof daysPlan === "object") {
+    Object.keys(daysPlan).forEach((dayName) => {
+      const day = daysPlan[dayName];
+      if (!day) return;
+
+      html += `<div class="plan-day">
+        <div class="plan-day-title">${escapeHtml(dayName)}</div>`;
+
+      if (day["Warm-up"]) {
+        html += `<div><strong>Warm-up:</strong> ${escapeHtml(
+          String(day["Warm-up"])
+        )}</div>`;
+      }
+
+      const exercises = day.Exercises ?? day.exercises ?? [];
+      if (Array.isArray(exercises) && exercises.length) {
+        html += `<ul class="plan-list">`;
+        exercises.forEach((ex) => {
+          if (typeof ex === "string") {
+            html += `<li>${escapeHtml(ex)}</li>`;
+          } else {
+            const name = ex.name ?? "-";
+            const sets = ex.sets ?? "";
+            const reps = ex.reps ?? "";
+            html += `<li><strong>${escapeHtml(
+              name
+            )}</strong> — ${escapeHtml(String(sets))} × ${escapeHtml(
+              String(reps)
+            )}</li>`;
+          }
+        });
+        html += `</ul>`;
+      }
+
+      if (day["Cooldown"]) {
+        html += `<div style="margin-top:6px;"><strong>Cooldown:</strong> ${escapeHtml(
+          String(day["Cooldown"])
+        )}</div>`;
+      }
+
+      html += `</div>`;
+    });
+  }
+
+  return html;
+}
+
+
 
 function persistState() {
   localStorage.setItem("latestDietPlan", JSON.stringify(latestDietPlan));
@@ -237,16 +409,16 @@ if (btnGenerateDiet) {
     if (!data) return;
 
     // Expect backend to return: { plan_text: "..." }
-    dietResult.value = data.plan_text || JSON.stringify(data, null, 2);
+
     
 
 
     // store structured diet plan if available
-    latestDietPlan =
-      data.diet_plan || data.plan || data.diet || { raw_text: data.plan_text };
+   latestDietPlan =
+   data.diet_plan || data.plan || data.diet || { raw_text: data.plan_text };
 
-    latestDietPlan = data.diet_plan || {};
-    persistState();
+    dietResult.innerHTML = renderDietPlanPretty(latestDietPlan);
+   persistState();
   });
 }
 
@@ -285,17 +457,17 @@ if (btnGenerateWorkout) {
     if (!data) return;
 
     // Expect backend: { plan_text: "..." }
-    workoutResult.value = data.plan_text || JSON.stringify(data, null, 2);
+    
     
  
 
     // store structured workout plan if available
     latestWorkoutPlan =
-      data.workout_plan || data.plan || data.workout || { raw_text: data.plan_text };
+    data.workout_plan || data.plan || data.workout || { raw_text: data.plan_text };
 
 
-    latestWorkoutPlan = data.workout_plan || {};
-    persistState();
+    workoutResult.innerHTML = renderWorkoutPlanPretty(latestWorkoutPlan);
+   persistState();
   });
 }
 
@@ -340,13 +512,13 @@ if (btnAdvGenerate) {
       food_preference: advFood.value,
     };
 
-    // Very basic validation
+    // Validation
     if (!user.age || !user.height_cm || !user.weight_kg || !user.goal) {
       alert("Please fill all the required fields for advanced plan.");
       return;
     }
 
-    advWorkoutJson.textContent = "⏳ Generating advanced plan...";
+    advWorkoutJson.textContent = "⏳ Generating...";
     advDietJson.textContent = "";
     advOutputCard.style.display = "block";
 
@@ -357,21 +529,58 @@ if (btnAdvGenerate) {
 
     if (!data) return;
 
-    // Expect backend something like:
-    // { workout_json: {...}, diet_json: {...} }
-    advWorkoutJson.textContent = data.workout_json
-      ? JSON.stringify(data.workout_json, null, 2)
-      : JSON.stringify(data, null, 2);
+    
 
-    advDietJson.textContent = data.diet_json
-      ? JSON.stringify(data.diet_json, null, 2)
-      : "";
+    // ------------------------
+    // CORRECT WORKOUT JSON
+    // ------------------------
+    const advWorkoutPlan =
+      data.workout_json ||
+      data.meta?.advanced_plan?.["Workout Plan"] ||
+      {};
 
-    // Optionally also treat these as latest for export
-    if (data.workout_json) latestWorkoutPlan = data.workout_json;
-    if (data.diet_json) latestDietPlan = data.diet_json;
+    advWorkoutJson.innerHTML = renderWorkoutPlanPretty(advWorkoutPlan);
+
+
+
+    // ------------------------
+    // CORRECT DIET JSON (FIX)
+    // ------------------------
+    // ------------------------
+    // PROFESSIONAL FIX: Robust Data Fetching
+    // ------------------------
+    // Backend se aane wale alag-alag potential keys ko check karein
+    let rawDiet = 
+      data.diet_json || 
+      data.diet_plan || 
+      data.diet || 
+      data.meta?.advanced_plan?.["Diet Plan"] || 
+      {};
+
+    // Agar data string format me hai (kabhi kabhi AI text bhej deta hai), toh parse karein
+    if (typeof rawDiet === "string") {
+        try {
+            rawDiet = JSON.parse(rawDiet);
+        } catch (e) {
+            console.error("Failed to parse diet JSON string", e);
+            rawDiet = { raw_text: rawDiet };
+        }
+    }
+
+    const advDietPlan = rawDiet;
+
+    
+
+
+    // SAVE LATEST
+    latestWorkoutPlan = advWorkoutPlan;
+    latestDietPlan = advDietPlan;
+    advDietJson.innerHTML = renderDietPlanPretty(advDietPlan);
+    persistState();
   });
 }
+
+
 
 // ================== CALORIE TRACKER ================== //
 
