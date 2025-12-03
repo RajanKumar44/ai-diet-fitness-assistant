@@ -123,8 +123,16 @@ def diet_api(user: Dict[str, Any]) -> Dict[str, Any]:
 
     user = dict(user)
 
+    # Activity level ka safe default
     user.setdefault("activity_level", "moderately active")
-    user.setdefault("food_preference", "veg")
+
+    # Agar frontend se food_preference aaya hai to usko respect karo,
+    # warna hi "veg" default rakho
+    food_pref = (user.get("food_preference") or "").strip().lower()
+    if not food_pref:
+        food_pref = "veg"
+
+    user["food_preference"] = food_pref
 
     plan = generate_diet_plan(user)
 
@@ -136,6 +144,7 @@ def diet_api(user: Dict[str, Any]) -> Dict[str, Any]:
         "plan_text": pretty_text,
         "diet_plan": plan,
     }
+
 
 
 # ------------------------

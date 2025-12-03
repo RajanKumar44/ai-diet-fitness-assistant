@@ -452,6 +452,7 @@ const dietSelect = document.getElementById("dietPreference");
 
 if (btnGenerateDiet) {
   btnGenerateDiet.addEventListener("click", async () => {
+        // 1) dropdown ka value lo (Vegetarian / Non-Vegetarian / Vegan)
     const type = dietSelect.value;
 
     if (!type || type === "Select diet type") {
@@ -460,14 +461,29 @@ if (btnGenerateDiet) {
     }
 
     dietResult.value = "⏳ Generating diet plan from AI backend...";
-    
+
+    // 2) is text ko food_preference me map karo
+    let foodPref = "veg";  // default
+    const t = type.toLowerCase();
+
+    if (t.includes("non-veg")) {
+      foodPref = "non-vegetarian";
+    } else if (t.includes("vegan")) {
+      foodPref = "vegan";
+    } else {
+      foodPref = "veg";  // Vegetarian
+    }
+
+    // 3) backend ko sahi key ke saath bhejo
     const payload = {
-      ...getUserProfile(), // form se live values
-      ...USER_PROFILE, // agar profile save ki hui hai
-      diet_type: type,
+      ...getUserProfile(),
+      ...USER_PROFILE,
+      food_preference: foodPref,   // 🔥 IMPORTANT
+      // diet_type: type,          // optional: chaho to hata do
     };
 
     const data = await callApi("/diet", payload);
+
     if (!data) return;
 
     // Expect backend to return: { plan_text: "..." }
