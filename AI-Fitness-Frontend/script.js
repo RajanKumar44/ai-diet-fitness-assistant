@@ -693,6 +693,87 @@ if (btnAddFood) {
   });
 }
 
+// ================== CALORIE MIC VOICE INPUT ================== //
+
+// mic button = calorie section ke wrapper ka 2nd button
+const micBtn = document.querySelector(
+  "#calories .calorie-input-wrapper button:nth-of-type(2)"
+);
+
+// Browser me speech recognition available hai ya nahi
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (micBtn && SpeechRecognition) {
+  const recognition = new SpeechRecognition();
+
+  // Hindi + English mix ke liye "hi-IN" bhi set kar sakte ho
+  // recognition.lang = "en-US";
+  recognition.lang = "en-IN";
+  recognition.interimResults = false; // sirf final result
+  recognition.maxAlternatives = 1;
+
+  let listening = false;
+
+  micBtn.addEventListener("click", () => {
+    if (!listening) {
+      listening = true;
+      recognition.start();
+
+      // user ko feedback (layout change nahi, sirf placeholder)
+      const oldPlaceholder = calorieInput.placeholder;
+      calorieInput.dataset.oldPlaceholder = oldPlaceholder;
+      calorieInput.placeholder = "Listening... speak your food item 🎙️";
+    } else {
+      // dobara click kare to stop
+      listening = false;
+      recognition.stop();
+    }
+  });
+
+  recognition.addEventListener("result", (event) => {
+    listening = false;
+
+    const transcript = event.results[0][0].transcript;
+    console.log("Heard:", transcript);
+
+    // text box me set karo
+    calorieInput.value = transcript;
+
+    // placeholder normal karo
+    if (calorieInput.dataset.oldPlaceholder) {
+      calorieInput.placeholder = calorieInput.dataset.oldPlaceholder;
+      delete calorieInput.dataset.oldPlaceholder;
+    }
+
+    // OPTIONAL: auto-add bhi kar sakte ho
+    // btnAddFood.click();
+  });
+
+  recognition.addEventListener("end", () => {
+    listening = false;
+    // agar user ne manual stop kiya, placeholder wapas normal
+    if (calorieInput.dataset.oldPlaceholder) {
+      calorieInput.placeholder = calorieInput.dataset.oldPlaceholder;
+      delete calorieInput.dataset.oldPlaceholder;
+    }
+  });
+
+  recognition.addEventListener("error", (event) => {
+    listening = false;
+    console.error("Speech recognition error:", event.error);
+    alert("Mic recognition error: " + event.error);
+
+    if (calorieInput.dataset.oldPlaceholder) {
+      calorieInput.placeholder = calorieInput.dataset.oldPlaceholder;
+      delete calorieInput.dataset.oldPlaceholder;
+    }
+  });
+} else {
+  console.log("SpeechRecognition not supported in this browser.");
+}
+
+
 // ================== AI COACH RECOMMENDATION ================== //
 
 const btnGetRecommendation = document.getElementById("btnGetRecommendation");
