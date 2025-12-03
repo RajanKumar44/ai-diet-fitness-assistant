@@ -10,6 +10,66 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;");
 }
 
+// =================== API BASE URL =================== //
+// Change this to your backend URL + port
+const API_BASE = "http://127.0.0.1:8000";
+
+// ---------Dshboard 3 BoXes-----------------
+
+function updateDashboardMetrics() {
+  // ---- 1) BMI calculation ----
+  const h = USER_PROFILE.height_cm;
+  const w = USER_PROFILE.weight_kg;
+
+  if (h && w) {
+    const bmi = (w / ((h / 100) ** 2)).toFixed(1);
+    document.getElementById("bmiValue").textContent = bmi;
+
+    let status = "Normal Range";
+    if (bmi < 18.5) status = "Underweight";
+    else if (bmi > 24.9) status = "Overweight";
+
+    document.getElementById("bmiStatus").textContent = status;
+  }
+
+  // ---- 2) Daily calorie goal ----
+  let dailyGoal = 2000;
+  const age = USER_PROFILE.age || 25;
+  const gender = USER_PROFILE.gender || "male";
+  const activity = USER_PROFILE.activity_level || "moderately active";
+
+  if (h && w && age) {
+    let BMR = 0;
+
+    // Mifflin-St Jeor Equation (professional)
+    if (gender === "male") {
+      BMR = 10 * w + 6.25 * h - 5 * age + 5;
+    } else {
+      BMR = 10 * w + 6.25 * h - 5 * age - 161;
+    }
+
+    const multipliers = {
+      "sedentary": 1.2,
+      "lightly active": 1.375,
+      "moderately active": 1.55,
+      "very active": 1.725,
+    };
+
+    dailyGoal = Math.round(BMR * (multipliers[activity] || 1.55));
+  }
+
+  document.getElementById("dailyGoal").textContent = dailyGoal;
+
+  // ---- 3) Today's progress ----
+  const todayCals = calorieTotal;
+  document.getElementById("todayCalories").textContent = todayCals;
+
+  const progress = Math.round((todayCals / dailyGoal) * 100) || 0;
+  document.getElementById("todayProgress").textContent = `${progress}% of goal`;
+}
+
+
+
 
 // ========== SIMPLE MARKDOWN RENDERER (FOR AI TEXT) ========== //
 // This does NOT change any layout. It only converts **bold** and
@@ -43,9 +103,7 @@ let calorieTotal = 0;
 let weeklyCalories = [0, 0, 0, 0, 0, 0, 0];
 let calorieChart = null;
 
-// =================== API BASE URL =================== //
-// Change this to your backend URL + port
-const API_BASE = "https://ai-diet-fitness-assistant.onrender.com";
+
 
 /* =========================================
    NEW PROFESSIONAL DIET RENDERER (With Emojis)
@@ -409,6 +467,30 @@ if (profileSaveBtn) {
 
     // Optional: backend ko bhi bhejo
     await callApi("/save-profile", USER_PROFILE);
+    // ✅ yahan dashboard ko fresh data se update karo
+    updateDashboardMetrics();
+
+    const bmi = USER_PROFILE.weight_kg && USER_PROFILE.height_cm
+  ? (USER_PROFILE.weight_kg / ((USER_PROFILE.height_cm/100)**2)).toFixed(1)
+  : 0;
+
+const age = USER_PROFILE.age || 25;
+const gender = USER_PROFILE.gender || "male";
+const activity = USER_PROFILE.activity_level || "moderately active";
+
+let BMR = 10*USER_PROFILE.weight_kg + 6.25*USER_PROFILE.height_cm - 5*age + (gender==="male"?5:-161);
+
+const multipliers = {
+  "sedentary": 1.2,
+  "lightly active": 1.375,
+  "moderately active": 1.55,
+  "very active": 1.725,
+};
+
+const goalCalories = Math.round(BMR * (multipliers[activity] || 1.55));
+
+applyDashboardEffects(bmi, goalCalories, calorieTotal);
+
 
     alert("Profile saved successfully!");
   });
@@ -681,6 +763,27 @@ if (btnAddFood) {
     calorieTotal = data.total ?? calorieTotal;
     calorieTotalSpan.textContent = calorieTotal;
 
+    // ✅ calories change hue, dashboard progress bhi update karo
+    updateDashboardMetrics();
+    const profile = getUserProfile();
+const bmi = profile.weight_kg && profile.height_cm
+  ? (profile.weight_kg / ((profile.height_cm/100)**2)).toFixed(1)
+  : 0;
+
+let BMR = 10*profile.weight_kg + 6.25*profile.height_cm - 5*profile.age + (profile.gender==="male"?5:-161);
+
+const multipliers = {
+  "sedentary": 1.2,
+  "lightly active": 1.375,
+  "moderately active": 1.55,
+  "very active": 1.725,
+};
+
+const goalCalories = Math.round(BMR * (multipliers[profile.activity_level] || 1.55));
+
+applyDashboardEffects(bmi, goalCalories, calorieTotal);
+
+    
     const li = document.createElement("li");
     li.textContent = `${text} – estimated via AI`;
     calorieList.appendChild(li);
@@ -1043,9 +1146,61 @@ if (btnDownloadPDF) {
 window.addEventListener("load", () => {
   // initial render
   restoreState(); 
+  // ✅ restored USER_PROFILE + calorieTotal se dashboard metrics update
+  updateDashboardMetrics();
+  const p = getUserProfile();
+const bmi = p.weight_kg && p.height_cm
+  ? (p.weight_kg / ((p.height_cm/100)**2)).toFixed(1)
+  : 0;
+
+let BMR = 10*p.weight_kg + 6.25*p.height_cm - 5*p.age + (p.gender==="male"?5:-161);
+
+const multipliers = {
+  "sedentary": 1.2,
+  "lightly active": 1.375,
+  "moderately active": 1.55,
+  "very active": 1.725,
+};
+
+const goalCalories = Math.round(BMR * (multipliers[p.activity_level] || 1.55));
+
+applyDashboardEffects(bmi, goalCalories, calorieTotal);
+
+
   renderHistory();
   updateChart();
 });
 
 
 
+function animateCount(id, target) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    let start = 0;
+    const step = Math.ceil(target / 40);
+
+    const counter = setInterval(() => {
+        start += step;
+        if (start >= target) {
+            start = target;
+            clearInterval(counter);
+        }
+        el.textContent = start;
+    }, 20);
+}
+
+
+function applyDashboardEffects(bmi, targetCalories, calorieTotal) {
+    // Only animate progress BAR, not the text
+    
+    const bar = document.getElementById("progressBarFill");
+    if (!bar) return;
+
+    let pct = (calorieTotal / targetCalories) * 100;
+    if (pct > 100) pct = 100;
+
+    // smooth animation
+    bar.style.transition = "width 0.6s ease-out";
+    bar.style.width = pct + "%";
+}

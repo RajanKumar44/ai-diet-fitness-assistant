@@ -16,11 +16,14 @@ def chat_with_coach(history):
         formatted.append({"role": msg["role"], "content": msg["content"]})
 
     # Call Groq working model
+    # Limit history size (fixes token overflow 413 error)
+    safe_history = history[-5:] if len(history) > 5 else history
+
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",  # <- NEW WORKING MODEL
-        messages=formatted,
-        temperature=0.5,
-        max_tokens=400
+    model="llama-3.1-8b-instant",
+    messages=safe_history,
+    max_tokens=350
     )
+
     return response.choices[0].message.content
 

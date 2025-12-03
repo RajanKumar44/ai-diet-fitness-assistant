@@ -89,18 +89,22 @@
         <div class="grid cards-3">
           <div class="card metric-card">
             <p class="metric-label">BMI Status</p>
-            <h2 class="metric-value">23.5</h2>
-            <p class="metric-sub">Normal Range</p>
+            <h2 class="metric-value" id="bmiValue">23.5</h2>
+            <p class="metric-sub" id="bmiStatus">Normal Range</p>
           </div>
           <div class="card metric-card">
             <p class="metric-label">Daily Goal</p>
-            <h2 class="metric-value">2000</h2>
+            <h2 class="metric-value" id="dailyGoal">2000</h2>
             <p class="metric-sub">Calories Target</p>
           </div>
           <div class="card metric-card">
             <p class="metric-label">Today's Progress</p>
-            <h2 class="metric-value">1450</h2>
-            <p class="metric-sub">73% of goal</p>
+            <h2 class="metric-value" id="todayCalories">1450</h2>
+            <p class="metric-sub" id="todayProgress">73% of goal</p>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="progressBarFill"></div>
+           </div>
+
           </div>
         </div>
 
