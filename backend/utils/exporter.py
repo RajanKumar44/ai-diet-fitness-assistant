@@ -164,6 +164,77 @@ def create_summary_pdf(username, calories, diet_plan, workout_plan, ai_advice, c
             c.rect(40, y - row_height, sum(col_widths), row_height, fill=0, stroke=1)
 
             y -= row_height
+    
+    # -----------------------------
+    # MARKDOWN STYLE TEXT RENDERER
+    # -----------------------------
+    def draw_markdown_block(raw_text, left_margin=40):
+        """
+        Simple markdown style renderer:
+        - '### Heading' → blue sub-heading
+        - '- bullet'    → • bullets with indent
+        - normal text   → paragraphs
+        """
+        nonlocal y
+        c.setFont(DEFAULT_FONT, 10)
+        c.setFillColor(COL_TEXT)
+
+        lines = str(raw_text).split("\n")
+
+        for line in lines:
+            line = line.rstrip()
+
+            # blank line → बस थोड़ा gap
+            if not line:
+                y -= 6
+                continue
+
+            # ----- HEADINGS:  ### Title -----
+            if line.lstrip().startswith("###"):
+                if y < 60:
+                    reset_page()
+                title = line.lstrip("#").strip()
+                c.setFont(BOLD_FONT, 11)
+                c.setFillColor(COL_PRIMARY)
+                c.drawString(left_margin, y, title)
+                y -= 18
+                c.setFont(DEFAULT_FONT, 10)
+                c.setFillColor(COL_TEXT)
+                continue
+
+            # ----- BULLETS:  - point -----
+            if line.lstrip().startswith("- "):
+                if y < 60:
+                    reset_page()
+                bullet_text = line.lstrip()[2:].strip()
+                wrapped = textwrap.wrap(bullet_text, 85)
+
+                # bullet dot
+                c.drawString(left_margin, y, u"•")
+                text_x = left_margin + 15
+                text_y = y
+
+                for i, w in enumerate(wrapped):
+                    if i == 0:
+                        c.drawString(text_x, text_y, w)
+                    else:
+                        text_y -= 14
+                        if text_y < 50:
+                            reset_page()
+                            text_y = y
+                        c.drawString(text_x, text_y, w)
+
+                y = text_y - 14
+                continue
+
+            # ----- NORMAL PARAGRAPH -----
+            if y < 60:
+                reset_page()
+            wrapped = textwrap.wrap(line, 90)
+            for w in wrapped:
+                c.drawString(left_margin, y, w)
+                y -= 14
+            y -= 4
 
     # ==========================
     # 1. WORKOUT SECTION
@@ -293,24 +364,60 @@ def create_summary_pdf(username, calories, diet_plan, workout_plan, ai_advice, c
         y -= 20
 
     # ==========================
-    # 3. AI ADVICE
+    # 3. AI ADVICE (FORMATTED)
     # ==========================
     if ai_advice:
         draw_section_title("Coach Advice", "🤖")
-        lines = str(ai_advice).split('\n')
+        # yaha ai_advice markdown format me aa raha hai
+        # (### headings, - bullets, etc.) – isko nicely render karte hain
+        draw_markdown_block(ai_advice, left_margin=40)
+
+    
+    # ==========================
+    # 4. AI CHAT HISTORY  (NEW FIX)
+    # ==========================
+    if chat_history:
+        draw_section_title("Chat History", "💬")
         c.setFont(DEFAULT_FONT, 10)
-        c.setFillColor(COL_TEXT)
-        
-        for line in lines:
-            line = line.strip()
-            if not line: continue
-            
-            wrapped = textwrap.wrap(line, 90)
-            for w in wrapped:
-                if y < 40: reset_page()
-                c.drawString(40, y, w)
-                y -= 14
-            y -= 2
+
+        for msg in chat_history:
+            role = msg.get("role", "")
+            content = msg.get("content", "")
+
+            if not content:
+                continue
+
+            # Bubble color + label
+            if role == "user":
+                bubble_color = colors.HexColor("#E3F2FD")   # light blue
+                label = "You"
+            else:
+                bubble_color = colors.HexColor("#F3E5F5")   # light purple
+                label = "Coach"
+
+            # Bubble rectangle height calculation
+            wrapped = textwrap.wrap(content, 80)
+            bubble_height = 20 + (len(wrapped) * 12)
+
+            if y - bubble_height < 50:
+                reset_page()
+
+            # Bubble background box
+            c.setFillColor(bubble_color)
+            c.rect(40, y - bubble_height, width - 80, bubble_height, fill=1, stroke=0)
+
+            # Text inside bubble
+            c.setFillColor(colors.black)
+            c.setFont(BOLD_FONT, 10)
+            c.drawString(50, y - 16, f"{label}:")
+
+            c.setFont(DEFAULT_FONT, 10)
+            txt_y = y - 32
+            for line in wrapped:
+                c.drawString(60, txt_y, line)
+                txt_y -= 12
+
+            y -= (bubble_height + 10)
 
     c.save()
     return filepath

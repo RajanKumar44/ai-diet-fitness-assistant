@@ -741,8 +741,7 @@ if (btnAdvGenerate) {
 }
 
 
-
-// ================== CALORIE TRACKER ================== //
+// ================== CALORIE TRACKER (FIXED) ================== //
 
 const calorieInput = document.getElementById("calorieInput");
 const calorieTotalSpan = document.getElementById("calorieTotal");
@@ -759,40 +758,53 @@ if (btnAddFood) {
     const data = await callApi("/calories", payload);
     if (!data) return;
 
-    // Expect backend: { total: number, details: "line1\nline2..." }
-    calorieTotal = data.total ?? calorieTotal;
+    // --- FIX: Add new calories to total instead of replacing ---
+    const newCalories = data.total || 0;
+    calorieTotal += newCalories; 
+    // ---------------------------------------------------------
+
     calorieTotalSpan.textContent = calorieTotal;
 
-    // ✅ calories change hue, dashboard progress bhi update karo
-    updateDashboardMetrics();
+    // ✅ Update Dashboard Metrics
+    if (typeof updateDashboardMetrics === "function") {
+        updateDashboardMetrics();
+    }
+
     const profile = getUserProfile();
-const bmi = profile.weight_kg && profile.height_cm
-  ? (profile.weight_kg / ((profile.height_cm/100)**2)).toFixed(1)
-  : 0;
+    // Safety check values to prevent NaN errors
+    const weight = profile.weight_kg || 0;
+    const height = profile.height_cm || 0;
+    const age = profile.age || 0;
 
-let BMR = 10*profile.weight_kg + 6.25*profile.height_cm - 5*profile.age + (profile.gender==="male"?5:-161);
+    const bmi = (weight && height) 
+      ? (weight / ((height/100)**2)).toFixed(1)
+      : 0;
 
-const multipliers = {
-  "sedentary": 1.2,
-  "lightly active": 1.375,
-  "moderately active": 1.55,
-  "very active": 1.725,
-};
+    let BMR = 10 * weight + 6.25 * height - 5 * age + (profile.gender === "male" ? 5 : -161);
 
-const goalCalories = Math.round(BMR * (multipliers[profile.activity_level] || 1.55));
+    const multipliers = {
+      "sedentary": 1.2,
+      "lightly active": 1.375,
+      "moderately active": 1.55,
+      "very active": 1.725,
+    };
 
-applyDashboardEffects(bmi, goalCalories, calorieTotal);
+    const goalCalories = Math.round(BMR * (multipliers[profile.activity_level] || 1.55));
 
+    // Apply dashboard effects with updated total
+    if (typeof applyDashboardEffects === "function") {
+        applyDashboardEffects(bmi, goalCalories, calorieTotal);
+    }
     
     const li = document.createElement("li");
-    li.textContent = `${text} – estimated via AI`;
+    // Thoda sa improvement: List me bhi dikhana ki kitni calories add hui
+    li.textContent = `${text} (+${newCalories} kcal) – estimated via AI`;
     calorieList.appendChild(li);
 
     console.log("Calorie details from backend:", data.details);
 
     calorieInput.value = "";
     persistState();
-
   });
 }
 
@@ -1084,6 +1096,7 @@ function updateChart() {
   });
 }
 
+
 // ===================== SAVE SUMMARY (MAIN FUNCTION) ===================== //
 
 const btnSaveSummary = document.getElementById("btnSaveSummary");
@@ -1099,37 +1112,41 @@ function buildSummaryPayload() {
   };
 }
 
-if (btnSaveSummary) {
-  btnSaveSummary.addEventListener("click", async () => {
-    // 1) Local storage me save karo (permanent for that browser)
-    saveSummaryToLocalStorage(calorieTotal, latestWorkoutPlan, latestDietPlan);
-    persistState();
+// if (btnSaveSummary) {
+//   btnSaveSummary.addEventListener("click", async () => {
+//     // 1) Local storage me save karo (permanent for that browser)
+//     saveSummaryToLocalStorage(calorieTotal, latestWorkoutPlan, latestDietPlan);
+//     persistState();
 
-    // 2) UI ko refresh karo (history + chart)
-    renderHistory();
-    updateChart();
+//     // 2) UI ko refresh karo (history + chart)
+//     renderHistory();
+//     updateChart();
 
-    // 3) Backend ko PDF ke liye call karo
-    const payload = buildSummaryPayload();
-    const res = await callApi("/export-summary", payload);
+//     // 3) Backend ko PDF ke liye call karo
+//     const payload = buildSummaryPayload();
+//     const res = await callApi("/export-summary", payload);
 
-    if (res && res.success) {
-      // Optional: backend history bhi store kar sakte ho
-      if (res.history) {
-        saveLocalHistory(res.history);
-      }
-      alert("Summary saved + PDF generated!");
-    } else {
-      alert("Failed to save summary");
-    }
-  });
-}
+//     if (res && res.success) {
+//       // Optional: backend history bhi store kar sakte ho
+//       if (res.history) {
+//         saveLocalHistory(res.history);
+//       }
+//       alert("Summary saved + PDF generated!");
+//     } else {
+//       alert("Failed to save summary");
+//     }
+//   });
+// }
 
 // ========== DOWNLOAD PDF ========== //
 const btnDownloadPDF = document.getElementById("btnDownloadPDF");
 
 if (btnDownloadPDF) {
-  btnDownloadPDF.addEventListener("click", async () => {
+  btnDownloadPDF.addEventListener("click", async (e) => {
+
+    // ✅ FORM SUBMIT KO ROKO
+    e.preventDefault();
+
     const payload = buildSummaryPayload();
     const res = await callApi("/export-summary", payload);
 
@@ -1149,22 +1166,24 @@ window.addEventListener("load", () => {
   // ✅ restored USER_PROFILE + calorieTotal se dashboard metrics update
   updateDashboardMetrics();
   const p = getUserProfile();
-const bmi = p.weight_kg && p.height_cm
+  const bmi = p.weight_kg && p.height_cm
   ? (p.weight_kg / ((p.height_cm/100)**2)).toFixed(1)
   : 0;
 
-let BMR = 10*p.weight_kg + 6.25*p.height_cm - 5*p.age + (p.gender==="male"?5:-161);
+ let BMR = 10*p.weight_kg + 6.25*p.height_cm - 5*p.age + (p.gender==="male"?5:-161);
 
-const multipliers = {
+ const multipliers = {
   "sedentary": 1.2,
   "lightly active": 1.375,
   "moderately active": 1.55,
   "very active": 1.725,
-};
+ }; 
+  
+ setRandomMotivation();
 
-const goalCalories = Math.round(BMR * (multipliers[p.activity_level] || 1.55));
+ const goalCalories = Math.round(BMR * (multipliers[p.activity_level] || 1.55));
 
-applyDashboardEffects(bmi, goalCalories, calorieTotal);
+ applyDashboardEffects(bmi, goalCalories, calorieTotal);
 
 
   renderHistory();
@@ -1203,4 +1222,106 @@ function applyDashboardEffects(bmi, targetCalories, calorieTotal) {
     // smooth animation
     bar.style.transition = "width 0.6s ease-out";
     bar.style.width = pct + "%";
+}
+
+/* =========================================
+   1. TOAST NOTIFICATION SYSTEM (Smooth UI)
+   ========================================= */
+function showToast(message, type = "success") {
+  const toast = document.createElement("div");
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> ${message}`;
+  
+  document.body.appendChild(toast);
+
+  // Animation Start
+  setTimeout(() => toast.classList.add("show"), 10);
+
+  // Remove after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// ... (Baaki code same rahega) ...
+
+/* =========================================
+   2. SAVE SUMMARY BUTTON (Fixed)
+   ========================================= */
+if (btnSaveSummary) {
+  btnSaveSummary.addEventListener("click", async (e) => {
+    // 🔥 CRITICAL FIX: Page Reload Rokna
+    e.preventDefault();
+
+    // 1. Loading State (Button ko disable karo aur text badlo)
+    const originalText = btnSaveSummary.innerHTML;
+    btnSaveSummary.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
+    btnSaveSummary.disabled = true;
+    btnSaveSummary.style.opacity = "0.7";
+
+    try {
+        // 2. Local Save (Data bachana)
+        saveSummaryToLocalStorage(calorieTotal, latestWorkoutPlan, latestDietPlan);
+        persistState();
+
+        // 3. UI Update (History Table aur Chart refresh)
+        renderHistory();
+        updateChart();
+
+        // 4. Backend Call (PDF ke liye)
+        const payload = buildSummaryPayload();
+        const res = await callApi("/export-summary", payload);
+
+        // 5. Success Message (Toast - No Alert)
+        if (res && res.success) {
+            showToast("Summary saved & PDF generated!");
+        } else {
+            showToast("Saved locally, but backend failed.", "error");
+        }
+
+    } catch (err) {
+        console.error(err);
+        showToast("An error occurred while saving.", "error");
+    } finally {
+        // 6. Restore Button (Wapas normal karo)
+        btnSaveSummary.innerHTML = originalText;
+        btnSaveSummary.disabled = false;
+        btnSaveSummary.style.opacity = "1";
+    }
+  });
+}
+
+
+
+/* =========================================
+   DYNAMIC MOTIVATION GENERATOR
+   ========================================= */
+const motivationalQuotes = [
+  "The only bad workout is the one that didn't happen.",
+  "Your body can stand almost anything. It’s your mind that you have to convince.",
+  "Fitness is not about being better than someone else. It’s about being better than you were yesterday.",
+  "Discipline is doing what needs to be done, even if you don't want to do it.",
+  "Success starts with self-discipline.",
+  "Don't stop when you're tired. Stop when you're done.",
+  "The pain you feel today will be the strength you feel tomorrow.",
+  "Motivation is what gets you started. Habit is what keeps you going.",
+  "Sweat is just fat crying.",
+  "A one-hour workout is only 4% of your day. No excuses."
+];
+
+function setRandomMotivation() {
+  const el = document.getElementById("motivationText");
+  if (!el) return;
+
+  // Pick random quote
+  const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+  const quote = motivationalQuotes[randomIndex];
+
+  // Set text with animation effect
+  el.style.opacity = 0;
+  setTimeout(() => {
+    el.innerHTML = `"${quote}"`;
+    el.style.opacity = 1;
+  }, 300);
 }

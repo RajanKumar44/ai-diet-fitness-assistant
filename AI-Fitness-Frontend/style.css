@@ -1055,3 +1055,96 @@ body {
 }
 
 
+/* ========================
+   TOAST NOTIFICATION STYLE
+   ======================== */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: rgba(15, 23, 42, 0.95); /* Dark Glass */
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth Bouncy Effect */
+  z-index: 9999;
+  font-family: system-ui, sans-serif;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast-success i { color: #4ade80; font-size: 1.1rem; }
+.toast-error i { color: #f87171; font-size: 1.1rem; }
+
+
+/* ========================
+   IMPROVED MOTIVATION CARD
+   ======================== */
+.motivation-card {
+  margin-top: 18px;
+  border-radius: 20px;
+  /* Stylish Gradient Background */
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.motivation-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(129, 140, 248, 0.6);
+}
+
+/* Quote Icon Decoration */
+.motivation-card::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  font-size: 8rem;
+  color: rgba(255, 255, 255, 0.03);
+  font-family: serif;
+  pointer-events: none;
+}
+
+.motivation-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #a5b4fc; /* Soft Indigo */
+  font-weight: 700;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.motivation-title i {
+  color: #818cf8;
+  font-size: 1.2rem;
+}
+
+.motivation-text {
+  color: #e2e8f0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  font-style: italic;
+  font-weight: 500;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
