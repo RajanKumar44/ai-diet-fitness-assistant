@@ -12,7 +12,7 @@ function escapeHtml(str) {
 
 // =================== API BASE URL =================== //
 // Change this to your backend URL + port
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "https://ai-diet-fitness-assistant.onrender.com";
 
 // ---------Dshboard 3 BoXes-----------------
 

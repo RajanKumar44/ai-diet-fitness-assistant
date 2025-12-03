@@ -1,9 +1,9 @@
 {
-    "name": "Mohan ",
-    "age": 18,
-    "weight_kg": 56,
-    "height_cm": 140,
+    "name": "Shubham ",
+    "age": 25,
+    "weight_kg": 65,
+    "height_cm": 156,
     "gender": "Male",
-    "goal": "Maintain Weight",
-    "activity_level": "High"
+    "goal": "Muscle Gain",
+    "activity_level": "Moderate"
 }

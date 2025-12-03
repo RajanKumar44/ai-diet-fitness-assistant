@@ -6334,5 +6334,435 @@
                 }
             ]
         ]
+    },
+    "Shubham ": {
+        "calories": [
+            1080,
+            1080
+        ],
+        "diet": [
+            {
+                "Breakfast": "Egg Omelette + Bread",
+                "Lunch": "Rice + Chicken Curry + Veg",
+                "Dinner": "Grilled Chicken + Rice",
+                "Snacks": [
+                    "Boiled Eggs",
+                    "Protein Shake"
+                ]
+            },
+            {
+                "Breakfast": "Egg Omelette + Bread",
+                "Lunch": "Rice + Chicken Curry + Veg",
+                "Dinner": "Grilled Chicken + Rice",
+                "Snacks": [
+                    "Boiled Eggs",
+                    "Protein Shake"
+                ]
+            }
+        ],
+        "workout": [
+            {
+                "Day 1 - Upper": {
+                    "Warm-up": "5\u201310 min dynamic warmup",
+                    "Exercises": [
+                        {
+                            "name": "Bench Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Shoulder Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Lat Pulldown",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Cable Fly",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Tricep Pushdown",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        }
+                    ],
+                    "Cooldown": "5 min stretching"
+                },
+                "Day 2 - Lower": {
+                    "Warm-up": "5\u201310 min dynamic warmup",
+                    "Exercises": [
+                        {
+                            "name": "Squats",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Leg Extension",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Hamstring Curl",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Leg Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Calf Raises",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        }
+                    ],
+                    "Cooldown": "5 min stretching"
+                },
+                "Day 3 - Upper": {
+                    "Warm-up": "5\u201310 min dynamic warmup",
+                    "Exercises": [
+                        {
+                            "name": "Bench Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Shoulder Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Lat Pulldown",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Cable Fly",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Tricep Pushdown",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        }
+                    ],
+                    "Cooldown": "5 min stretching"
+                },
+                "Day 4 - Lower": {
+                    "Warm-up": "5\u201310 min dynamic warmup",
+                    "Exercises": [
+                        {
+                            "name": "Squats",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Leg Extension",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Hamstring Curl",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Leg Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Calf Raises",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        }
+                    ],
+                    "Cooldown": "5 min stretching"
+                }
+            },
+            {
+                "Day 1 - Upper": {
+                    "Warm-up": "5\u201310 min dynamic warmup",
+                    "Exercises": [
+                        {
+                            "name": "Bench Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Shoulder Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Lat Pulldown",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Cable Fly",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Tricep Pushdown",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        }
+                    ],
+                    "Cooldown": "5 min stretching"
+                },
+                "Day 2 - Lower": {
+                    "Warm-up": "5\u201310 min dynamic warmup",
+                    "Exercises": [
+                        {
+                            "name": "Squats",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Leg Extension",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Hamstring Curl",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Leg Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Calf Raises",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        }
+                    ],
+                    "Cooldown": "5 min stretching"
+                },
+                "Day 3 - Upper": {
+                    "Warm-up": "5\u201310 min dynamic warmup",
+                    "Exercises": [
+                        {
+                            "name": "Bench Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Shoulder Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Lat Pulldown",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Cable Fly",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Tricep Pushdown",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        }
+                    ],
+                    "Cooldown": "5 min stretching"
+                },
+                "Day 4 - Lower": {
+                    "Warm-up": "5\u201310 min dynamic warmup",
+                    "Exercises": [
+                        {
+                            "name": "Squats",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Leg Extension",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Hamstring Curl",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Leg Press",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        },
+                        {
+                            "name": "Calf Raises",
+                            "sets": "4\u20135 sets",
+                            "reps": "6\u201312 reps"
+                        }
+                    ],
+                    "Cooldown": "5 min stretching"
+                }
+            }
+        ],
+        "chat": [
+            [
+                {
+                    "role": "user",
+                    "content": "I want to gain mussel so guid me"
+                },
+                {
+                    "role": "assistant",
+                    "content": "You want to gain muscle. Here's a step-by-step guide to help you achieve your goal:\n\n**1. Set Realistic Goals**:\n Define your muscle gain goals, such as:\n\t* How much weight you want to gain\n\t* Which muscle groups you want to focus on\n\t* A specific timeline for achieving your goals\n\n**2. Nutrition**:\n\t* **Caloric Intake**: Increase your daily caloric intake by 250-500 calories to support muscle growth. Aim for a caloric surplus of 10-20% above your maintenance level.\n\t* **Protein**: Eat 1-1.5 grams of protein per kilogram of body weight from sources like lean meats, fish, eggs, dairy, and plant-based options.\n\t* **Carbohydrates**: Focus on complex carbs like whole grains, fruits, and vegetables.\n\t* **Healthy Fats**: Include sources like nuts, seeds, avocados, and olive oil.\n\n**3. Training**:\n\t* **Resistance Training**: Focus on weightlifting, resistance band exercises, or bodyweight exercises to build muscle.\n\t* **Progressive Overload**: Gradually increase weight or resistance to challenge your muscles and promote growth.\n\t* **Split Routine**: Divide your workout into 3-4 days per week, targeting different muscle groups each day (e.g., chest and triceps, back and biceps, legs, and shoulders).\n\n**4. Rest and Recovery**:\n\t* **Sleep**: Aim for 7-9 hours of sleep per night to aid in muscle recovery.\n\t* **Rest Days**: Take 1-2 rest days per week to allow your muscles to recover and rebuild.\n\t* **Stretching and Foam Rolling**: Incorporate stretching and foam rolling to improve flexibility and reduce muscle soreness.\n\n**5. Supplements**:\n\t* **Protein Powder**: Consider adding a protein supplement to your diet to support muscle growth.\n\t* **Creat"
+                },
+                {
+                    "role": "user",
+                    "content": "Tell me where to start"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Let's break down the process into smaller, manageable steps. Here's a step-by-step guide to help you get started:\n\n**Step 1: Calculate Your Caloric Intake**\n\n1. Determine your basal metabolic rate (BMR) using an online BMR calculator or a formula: BMR = 66 + (6.2 x weight in lbs) + (12.7 x height in inches) - (6.8 x age in years)\n2. Multiply your BMR by an activity factor (AF) to estimate your daily caloric needs:\n\t* Sedentary (little to no exercise): AF = 1.2\n\t* Lightly active (light exercise/sports 1-3 days/week): AF = 1.375\n\t* Moderately active (moderate exercise/sports 3-5 days/week): AF = 1.55\n\t* Very active (hard exercise/sports 6-7 days a week): AF = 1.725\n\t* Extremely active (very hard exercise/sports & physical job or 2x training): AF = 1.9\n3. Calculate your daily caloric needs: Daily Calories = BMR x AF\n\n**Step 2: Set Your Caloric Surplus**\n\n1. Determine how much you want to gain weight (in pounds or kilograms).\n2. Aim for a caloric surplus of 250-500 calories above your maintenance level to support muscle growth.\n3. Calculate your daily caloric intake for muscle gain: Daily Calories = Maintenance Calories + Caloric Surplus\n\n**Step 3: Plan Your Macronutrient Balance**\n\n1. Aim for a balanced diet with the following macronutrient ratios:\n\t* Protein: 1-1.5 grams/kg body weight\n\t* Carbohydrates: 2-3 grams/kg body weight\n\t* Fat: 0.5-1 gram/kg body weight\n2. Use"
+                },
+                {
+                    "role": "user",
+                    "content": "Want to loss weight"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Here's a step-by-step guide to help you lose weight:\n\n**Step 1: Set Realistic Goals**\n\n1. Define your weight loss goals, such as:\n\t* How much weight you want to lose\n\t* A specific timeline for achieving your goals\n\t* A healthy and sustainable rate of weight loss (1-2 pounds/week)\n2. Make sure your goals are specific, measurable, achievable, relevant, and time-bound (SMART).\n\n**Step 2: Calculate Your Caloric Deficit**\n\n1. Determine your basal metabolic rate (BMR) using an online BMR calculator or a formula: BMR = 66 + (6.2 x weight in lbs) + (12.7 x height in inches) - (6.8 x age in years)\n2. Multiply your BMR by an activity factor (AF) to estimate your daily caloric needs:\n\t* Sedentary (little to no exercise): AF = 1.2\n\t* Lightly active (light exercise/sports 1-3 days/week): AF = 1.375\n\t* Moderately active (moderate exercise/sports 3-5 days/week): AF = 1.55\n\t* Very active (hard exercise/sports 6-7 days a week): AF = 1.725\n\t* Extremely active (very hard exercise/sports & physical job or 2x training): AF = 1.9\n3. Calculate your daily caloric needs: Daily Calories = BMR x AF\n4. Create a caloric deficit by reducing your daily caloric intake by 500-1000 calories to promote weight loss.\n\n**Step 3: Eat a Balanced Diet**\n\n1. Focus on whole, unprocessed foods like:\n\t* Vegetables\n\t* Fruits\n\t* Lean proteins (chicken, fish, beans, lentils)\n\t* Whole grains (brown rice, quinoa"
+                },
+                {
+                    "role": "user",
+                    "content": "I want to gain weight so guid me"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Gaining weight in a healthy way requires a combination of proper nutrition and a well-planned exercise routine. Here's a step-by-step guide to help you gain weight:\n\n**Step 1: Determine Your Caloric Surplus**\n\n1. Calculate your basal metabolic rate (BMR) using an online BMR calculator or a formula: BMR = 66 + (6.2 x weight in lbs) + (12.7 x height in inches) - (6.8 x age in years)\n2. Multiply your BMR by an activity factor (AF) to estimate your daily caloric needs:\n\t* Sedentary (little to no exercise): AF = 1.2\n\t* Lightly active (light exercise/sports 1-3 days/week): AF = 1.375\n\t* Moderately active (moderate exercise/sports 3-5 days/week): AF = 1.55\n\t* Very active (hard exercise/sports 6-7 days a week): AF = 1.725\n\t* Extremely active (very hard exercise/sports & physical job or 2x training): AF = 1.9\n3. Calculate your daily caloric needs: Daily Calories = BMR x AF\n4. Create a caloric surplus by increasing your daily caloric intake by 250-500 calories to support weight gain.\n\n**Step 2: Eat More Frequently**\n\n1. Aim for 5-6 meals per day, including:\n\t* 3 main meals (breakfast, lunch, dinner)\n\t* 2-3 snacks (mid-morning, mid-afternoon, before bed)\n2. Space out your meals to keep your metabolism boosted and prevent hunger pangs.\n\n**Step 3: Focus on Calorie-Dense Foods**\n\n1. Include calorie-dense foods in your diet, such as:\n\t* Nuts and seeds (almonds, cashews, chia seeds)\n"
+                },
+                {
+                    "role": "user",
+                    "content": "Want to gain weight"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Gaining weight can be a challenging but achievable goal. Here are some tips to help you gain weight in a healthy way:\n\n**Eat More Frequently**\n\n1. Aim for 5-6 meals per day, including:\n\t* 3 main meals (breakfast, lunch, dinner)\n\t* 2-3 snacks (mid-morning, mid-afternoon, before bed)\n2. Space out your meals to keep your metabolism boosted and prevent hunger pangs.\n\n**Focus on Calorie-Dense Foods**\n\n1. Include calorie-dense foods in your diet, such as:\n\t* Nuts and seeds (almonds, cashews, chia seeds)\n\t* Dried fruits (dates, apricots, prunes)\n\t* Granola and energy bars\n\t* Trail mix with nuts and dried fruits\n2. Choose foods high in healthy fats, such as:\n\t* Avocados\n\t* Olive oil\n\t* Coconut oil\n\t* Fatty fish (salmon, tuna)\n\n**Increase Your Protein Intake**\n\n1. Aim for 1-1.5 grams of protein per kilogram of body weight from sources like:\n\t* Lean meats (chicken, beef, pork)\n\t* Fish and seafood (salmon, tuna, shrimp)\n\t* Eggs\n\t* Legumes (lentils, chickpeas, black beans)\n\t* Dairy products (milk, cheese, yogurt)\n2. Consider adding protein supplements to your diet, such as:\n\t* Whey protein powder\n\t* Casein protein powder\n\n**Choose Weight-Gain Shakes and Supplements**\n\n1. Consider adding weight-gain shakes and supplements to your diet, such as:\n\t* Mass gainers\n\t* Protein shakes\n\t* Creatine\n\t* HMB (beta-hydroxy beta-methylbutyrate)\n\n**Strength Train**\n\n1. Focus on strength training exercises, such as:\n\t* Weightlifting\n\t*"
+                },
+                {
+                    "role": "user",
+                    "content": "hi"
+                },
+                {
+                    "role": "assistant",
+                    "content": "How's it going? Is there anything I can help you with or would you like to chat?"
+                },
+                {
+                    "role": "user",
+                    "content": "want to build muscle"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Building muscle requires a combination of proper nutrition, consistent training, and sufficient rest. Here's a step-by-step guide to help you build muscle:\n\n**Step 1: Set Your Goals**\n\n1. Define your muscle-building goals, such as:\n\t* How much muscle mass you want to gain\n\t* Which muscle groups you want to focus on\n\t* A specific timeline for achieving your goals\n2. Make sure your goals are specific, measurable, achievable, relevant, and time-bound (SMART).\n\n**Step 2: Eat Enough Protein**\n\n1. Aim for 1-1.5 grams of protein per kilogram of body weight from sources like:\n\t* Lean meats (chicken, beef, pork)\n\t* Fish and seafood (salmon, tuna, shrimp)\n\t* Eggs\n\t* Legumes (lentils, chickpeas, black beans)\n\t* Dairy products (milk, cheese, yogurt)\n2. Consider adding protein supplements to your diet, such as:\n\t* Whey protein powder\n\t* Casein protein powder\n\n**Step 3: Eat Enough Calories**\n\n1. Calculate your daily caloric needs by multiplying your BMR (basal metabolic rate) by an activity factor (AF):\n\t* Sedentary (little to no exercise): AF = 1.2\n\t* Lightly active (light exercise/sports 1-3 days/week): AF = 1.375\n\t* Moderately active (moderate exercise/sports 3-5 days/week): AF = 1.55\n\t* Very active (hard exercise/sports 6-7 days a week): AF = 1.725\n\t* Extremely active (very hard exercise/sports & physical job or 2x training): AF = 1.9\n2. Create a caloric surplus by increasing your daily caloric intake by 250-500 calories to support muscle growth.\n\n**Step "
+                },
+                {
+                    "role": "user",
+                    "content": "guid me"
+                },
+                {
+                    "role": "assistant",
+                    "content": "To build muscle, you'll need to focus on the following areas:\n\n**Nutrition**\n\n1. **Eat enough protein**: Aim for 1-1.5 grams of protein per kilogram of body weight from sources like lean meats, fish, eggs, dairy, and plant-based options.\n2. **Eat enough calories**: Create a caloric surplus by increasing your daily caloric intake by 250-500 calories to support muscle growth.\n3. **Eat frequent meals**: Aim for 5-6 meals per day, including 3 main meals and 2-3 snacks.\n4. **Focus on complex carbohydrates**: Include sources like whole grains, fruits, and vegetables in your diet.\n\n**Training**\n\n1. **Focus on compound exercises**: Include exercises like squats, deadlifts, bench press, and rows in your workout routine.\n2. **Train with weights**: Use weights or resistance bands to challenge your muscles and promote growth.\n3. **Aim for progressive overload**: Gradually increase the weight or resistance you're lifting over time to continue challenging your muscles.\n4. **Train each major muscle group 3-4 times per week**: Include exercises like chest, back, shoulders, legs, and arms in your workout routine.\n\n**Rest and Recovery**\n\n1. **Aim for 7-9 hours of sleep per night**: Adequate sleep is essential for muscle recovery and growth.\n2. **Take rest days as needed**: Listen to your body and take rest days when you need them.\n3. **Stretch and foam roll**: Incorporate stretching and foam rolling into your routine to improve flexibility and reduce muscle soreness.\n\n**Sample Workout Routine**\n\nHere's a sample workout routine you can follow:\n\n**Day 1: Chest and Triceps**\n\n1. Barbell bench press (3 sets of 8-12 reps)\n2. Incline dumbbell press (3 sets of 10-15 reps)\n3. Tricep pushdowns (3"
+                },
+                {
+                    "role": "user",
+                    "content": "I want  to gain muscle but not the weight guid me"
+                },
+                {
+                    "role": "assistant",
+                    "content": "To gain muscle without gaining weight, you'll need to focus on building lean muscle mass while maintaining a healthy body fat percentage. Here's a step-by-step guide to help you achieve your goal:\n\n**Understand the Concept of Body Composition**\n\n1. **Body fat percentage**: This is the percentage of body fat compared to lean body mass (muscle).\n2. **Lean body mass**: This refers to the weight of your muscles, bones, and organs, excluding body fat.\n\n**Nutritional Strategies**\n\n1. **Eat enough protein**: Aim for 1-1.5 grams of protein per kilogram of body weight to support muscle growth and maintain muscle mass.\n2. **Eat complex carbohydrates**: Include sources like whole grains, fruits, and vegetables in your diet to provide energy for workouts and support muscle growth.\n3. **Eat healthy fats**: Include sources like nuts, seeds, and avocados in your diet to provide energy and support hormone production.\n4. **Caloric surplus**: Create a daily caloric surplus of 250-500 calories above your maintenance level to support muscle growth.\n5. **Eat frequently**: Aim for 5-6 meals per day, including 3 main meals and 2-3 snacks to maintain muscle mass and support growth.\n\n**Training Strategies**\n\n1. **Focus on progressive overload**: Gradually increase the weight or resistance you're lifting over time to challenge your muscles and promote growth.\n2. **Incorporate compound exercises**: Include exercises like squats, deadlifts, bench press, and rows in your workout routine to stimulate muscle growth.\n3. **Train each major muscle group 3-4 times per week**: Include exercises like chest, back, shoulders, legs, and arms"
+                }
+            ],
+            [
+                {
+                    "role": "user",
+                    "content": "I want to gain mussel so guid me"
+                },
+                {
+                    "role": "assistant",
+                    "content": "You want to gain muscle. Here's a step-by-step guide to help you achieve your goal:\n\n**1. Set Realistic Goals**:\n Define your muscle gain goals, such as:\n\t* How much weight you want to gain\n\t* Which muscle groups you want to focus on\n\t* A specific timeline for achieving your goals\n\n**2. Nutrition**:\n\t* **Caloric Intake**: Increase your daily caloric intake by 250-500 calories to support muscle growth. Aim for a caloric surplus of 10-20% above your maintenance level.\n\t* **Protein**: Eat 1-1.5 grams of protein per kilogram of body weight from sources like lean meats, fish, eggs, dairy, and plant-based options.\n\t* **Carbohydrates**: Focus on complex carbs like whole grains, fruits, and vegetables.\n\t* **Healthy Fats**: Include sources like nuts, seeds, avocados, and olive oil.\n\n**3. Training**:\n\t* **Resistance Training**: Focus on weightlifting, resistance band exercises, or bodyweight exercises to build muscle.\n\t* **Progressive Overload**: Gradually increase weight or resistance to challenge your muscles and promote growth.\n\t* **Split Routine**: Divide your workout into 3-4 days per week, targeting different muscle groups each day (e.g., chest and triceps, back and biceps, legs, and shoulders).\n\n**4. Rest and Recovery**:\n\t* **Sleep**: Aim for 7-9 hours of sleep per night to aid in muscle recovery.\n\t* **Rest Days**: Take 1-2 rest days per week to allow your muscles to recover and rebuild.\n\t* **Stretching and Foam Rolling**: Incorporate stretching and foam rolling to improve flexibility and reduce muscle soreness.\n\n**5. Supplements**:\n\t* **Protein Powder**: Consider adding a protein supplement to your diet to support muscle growth.\n\t* **Creat"
+                },
+                {
+                    "role": "user",
+                    "content": "Tell me where to start"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Let's break down the process into smaller, manageable steps. Here's a step-by-step guide to help you get started:\n\n**Step 1: Calculate Your Caloric Intake**\n\n1. Determine your basal metabolic rate (BMR) using an online BMR calculator or a formula: BMR = 66 + (6.2 x weight in lbs) + (12.7 x height in inches) - (6.8 x age in years)\n2. Multiply your BMR by an activity factor (AF) to estimate your daily caloric needs:\n\t* Sedentary (little to no exercise): AF = 1.2\n\t* Lightly active (light exercise/sports 1-3 days/week): AF = 1.375\n\t* Moderately active (moderate exercise/sports 3-5 days/week): AF = 1.55\n\t* Very active (hard exercise/sports 6-7 days a week): AF = 1.725\n\t* Extremely active (very hard exercise/sports & physical job or 2x training): AF = 1.9\n3. Calculate your daily caloric needs: Daily Calories = BMR x AF\n\n**Step 2: Set Your Caloric Surplus**\n\n1. Determine how much you want to gain weight (in pounds or kilograms).\n2. Aim for a caloric surplus of 250-500 calories above your maintenance level to support muscle growth.\n3. Calculate your daily caloric intake for muscle gain: Daily Calories = Maintenance Calories + Caloric Surplus\n\n**Step 3: Plan Your Macronutrient Balance**\n\n1. Aim for a balanced diet with the following macronutrient ratios:\n\t* Protein: 1-1.5 grams/kg body weight\n\t* Carbohydrates: 2-3 grams/kg body weight\n\t* Fat: 0.5-1 gram/kg body weight\n2. Use"
+                },
+                {
+                    "role": "user",
+                    "content": "Want to loss weight"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Here's a step-by-step guide to help you lose weight:\n\n**Step 1: Set Realistic Goals**\n\n1. Define your weight loss goals, such as:\n\t* How much weight you want to lose\n\t* A specific timeline for achieving your goals\n\t* A healthy and sustainable rate of weight loss (1-2 pounds/week)\n2. Make sure your goals are specific, measurable, achievable, relevant, and time-bound (SMART).\n\n**Step 2: Calculate Your Caloric Deficit**\n\n1. Determine your basal metabolic rate (BMR) using an online BMR calculator or a formula: BMR = 66 + (6.2 x weight in lbs) + (12.7 x height in inches) - (6.8 x age in years)\n2. Multiply your BMR by an activity factor (AF) to estimate your daily caloric needs:\n\t* Sedentary (little to no exercise): AF = 1.2\n\t* Lightly active (light exercise/sports 1-3 days/week): AF = 1.375\n\t* Moderately active (moderate exercise/sports 3-5 days/week): AF = 1.55\n\t* Very active (hard exercise/sports 6-7 days a week): AF = 1.725\n\t* Extremely active (very hard exercise/sports & physical job or 2x training): AF = 1.9\n3. Calculate your daily caloric needs: Daily Calories = BMR x AF\n4. Create a caloric deficit by reducing your daily caloric intake by 500-1000 calories to promote weight loss.\n\n**Step 3: Eat a Balanced Diet**\n\n1. Focus on whole, unprocessed foods like:\n\t* Vegetables\n\t* Fruits\n\t* Lean proteins (chicken, fish, beans, lentils)\n\t* Whole grains (brown rice, quinoa"
+                },
+                {
+                    "role": "user",
+                    "content": "I want to gain weight so guid me"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Gaining weight in a healthy way requires a combination of proper nutrition and a well-planned exercise routine. Here's a step-by-step guide to help you gain weight:\n\n**Step 1: Determine Your Caloric Surplus**\n\n1. Calculate your basal metabolic rate (BMR) using an online BMR calculator or a formula: BMR = 66 + (6.2 x weight in lbs) + (12.7 x height in inches) - (6.8 x age in years)\n2. Multiply your BMR by an activity factor (AF) to estimate your daily caloric needs:\n\t* Sedentary (little to no exercise): AF = 1.2\n\t* Lightly active (light exercise/sports 1-3 days/week): AF = 1.375\n\t* Moderately active (moderate exercise/sports 3-5 days/week): AF = 1.55\n\t* Very active (hard exercise/sports 6-7 days a week): AF = 1.725\n\t* Extremely active (very hard exercise/sports & physical job or 2x training): AF = 1.9\n3. Calculate your daily caloric needs: Daily Calories = BMR x AF\n4. Create a caloric surplus by increasing your daily caloric intake by 250-500 calories to support weight gain.\n\n**Step 2: Eat More Frequently**\n\n1. Aim for 5-6 meals per day, including:\n\t* 3 main meals (breakfast, lunch, dinner)\n\t* 2-3 snacks (mid-morning, mid-afternoon, before bed)\n2. Space out your meals to keep your metabolism boosted and prevent hunger pangs.\n\n**Step 3: Focus on Calorie-Dense Foods**\n\n1. Include calorie-dense foods in your diet, such as:\n\t* Nuts and seeds (almonds, cashews, chia seeds)\n"
+                },
+                {
+                    "role": "user",
+                    "content": "Want to gain weight"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Gaining weight can be a challenging but achievable goal. Here are some tips to help you gain weight in a healthy way:\n\n**Eat More Frequently**\n\n1. Aim for 5-6 meals per day, including:\n\t* 3 main meals (breakfast, lunch, dinner)\n\t* 2-3 snacks (mid-morning, mid-afternoon, before bed)\n2. Space out your meals to keep your metabolism boosted and prevent hunger pangs.\n\n**Focus on Calorie-Dense Foods**\n\n1. Include calorie-dense foods in your diet, such as:\n\t* Nuts and seeds (almonds, cashews, chia seeds)\n\t* Dried fruits (dates, apricots, prunes)\n\t* Granola and energy bars\n\t* Trail mix with nuts and dried fruits\n2. Choose foods high in healthy fats, such as:\n\t* Avocados\n\t* Olive oil\n\t* Coconut oil\n\t* Fatty fish (salmon, tuna)\n\n**Increase Your Protein Intake**\n\n1. Aim for 1-1.5 grams of protein per kilogram of body weight from sources like:\n\t* Lean meats (chicken, beef, pork)\n\t* Fish and seafood (salmon, tuna, shrimp)\n\t* Eggs\n\t* Legumes (lentils, chickpeas, black beans)\n\t* Dairy products (milk, cheese, yogurt)\n2. Consider adding protein supplements to your diet, such as:\n\t* Whey protein powder\n\t* Casein protein powder\n\n**Choose Weight-Gain Shakes and Supplements**\n\n1. Consider adding weight-gain shakes and supplements to your diet, such as:\n\t* Mass gainers\n\t* Protein shakes\n\t* Creatine\n\t* HMB (beta-hydroxy beta-methylbutyrate)\n\n**Strength Train**\n\n1. Focus on strength training exercises, such as:\n\t* Weightlifting\n\t*"
+                },
+                {
+                    "role": "user",
+                    "content": "hi"
+                },
+                {
+                    "role": "assistant",
+                    "content": "How's it going? Is there anything I can help you with or would you like to chat?"
+                },
+                {
+                    "role": "user",
+                    "content": "want to build muscle"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Building muscle requires a combination of proper nutrition, consistent training, and sufficient rest. Here's a step-by-step guide to help you build muscle:\n\n**Step 1: Set Your Goals**\n\n1. Define your muscle-building goals, such as:\n\t* How much muscle mass you want to gain\n\t* Which muscle groups you want to focus on\n\t* A specific timeline for achieving your goals\n2. Make sure your goals are specific, measurable, achievable, relevant, and time-bound (SMART).\n\n**Step 2: Eat Enough Protein**\n\n1. Aim for 1-1.5 grams of protein per kilogram of body weight from sources like:\n\t* Lean meats (chicken, beef, pork)\n\t* Fish and seafood (salmon, tuna, shrimp)\n\t* Eggs\n\t* Legumes (lentils, chickpeas, black beans)\n\t* Dairy products (milk, cheese, yogurt)\n2. Consider adding protein supplements to your diet, such as:\n\t* Whey protein powder\n\t* Casein protein powder\n\n**Step 3: Eat Enough Calories**\n\n1. Calculate your daily caloric needs by multiplying your BMR (basal metabolic rate) by an activity factor (AF):\n\t* Sedentary (little to no exercise): AF = 1.2\n\t* Lightly active (light exercise/sports 1-3 days/week): AF = 1.375\n\t* Moderately active (moderate exercise/sports 3-5 days/week): AF = 1.55\n\t* Very active (hard exercise/sports 6-7 days a week): AF = 1.725\n\t* Extremely active (very hard exercise/sports & physical job or 2x training): AF = 1.9\n2. Create a caloric surplus by increasing your daily caloric intake by 250-500 calories to support muscle growth.\n\n**Step "
+                },
+                {
+                    "role": "user",
+                    "content": "guid me"
+                },
+                {
+                    "role": "assistant",
+                    "content": "To build muscle, you'll need to focus on the following areas:\n\n**Nutrition**\n\n1. **Eat enough protein**: Aim for 1-1.5 grams of protein per kilogram of body weight from sources like lean meats, fish, eggs, dairy, and plant-based options.\n2. **Eat enough calories**: Create a caloric surplus by increasing your daily caloric intake by 250-500 calories to support muscle growth.\n3. **Eat frequent meals**: Aim for 5-6 meals per day, including 3 main meals and 2-3 snacks.\n4. **Focus on complex carbohydrates**: Include sources like whole grains, fruits, and vegetables in your diet.\n\n**Training**\n\n1. **Focus on compound exercises**: Include exercises like squats, deadlifts, bench press, and rows in your workout routine.\n2. **Train with weights**: Use weights or resistance bands to challenge your muscles and promote growth.\n3. **Aim for progressive overload**: Gradually increase the weight or resistance you're lifting over time to continue challenging your muscles.\n4. **Train each major muscle group 3-4 times per week**: Include exercises like chest, back, shoulders, legs, and arms in your workout routine.\n\n**Rest and Recovery**\n\n1. **Aim for 7-9 hours of sleep per night**: Adequate sleep is essential for muscle recovery and growth.\n2. **Take rest days as needed**: Listen to your body and take rest days when you need them.\n3. **Stretch and foam roll**: Incorporate stretching and foam rolling into your routine to improve flexibility and reduce muscle soreness.\n\n**Sample Workout Routine**\n\nHere's a sample workout routine you can follow:\n\n**Day 1: Chest and Triceps**\n\n1. Barbell bench press (3 sets of 8-12 reps)\n2. Incline dumbbell press (3 sets of 10-15 reps)\n3. Tricep pushdowns (3"
+                },
+                {
+                    "role": "user",
+                    "content": "I want  to gain muscle but not the weight guid me"
+                },
+                {
+                    "role": "assistant",
+                    "content": "To gain muscle without gaining weight, you'll need to focus on building lean muscle mass while maintaining a healthy body fat percentage. Here's a step-by-step guide to help you achieve your goal:\n\n**Understand the Concept of Body Composition**\n\n1. **Body fat percentage**: This is the percentage of body fat compared to lean body mass (muscle).\n2. **Lean body mass**: This refers to the weight of your muscles, bones, and organs, excluding body fat.\n\n**Nutritional Strategies**\n\n1. **Eat enough protein**: Aim for 1-1.5 grams of protein per kilogram of body weight to support muscle growth and maintain muscle mass.\n2. **Eat complex carbohydrates**: Include sources like whole grains, fruits, and vegetables in your diet to provide energy for workouts and support muscle growth.\n3. **Eat healthy fats**: Include sources like nuts, seeds, and avocados in your diet to provide energy and support hormone production.\n4. **Caloric surplus**: Create a daily caloric surplus of 250-500 calories above your maintenance level to support muscle growth.\n5. **Eat frequently**: Aim for 5-6 meals per day, including 3 main meals and 2-3 snacks to maintain muscle mass and support growth.\n\n**Training Strategies**\n\n1. **Focus on progressive overload**: Gradually increase the weight or resistance you're lifting over time to challenge your muscles and promote growth.\n2. **Incorporate compound exercises**: Include exercises like squats, deadlifts, bench press, and rows in your workout routine to stimulate muscle growth.\n3. **Train each major muscle group 3-4 times per week**: Include exercises like chest, back, shoulders, legs, and arms"
+                }
+            ]
+        ]
     }
 }
