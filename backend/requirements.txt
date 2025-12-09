@@ -5,5 +5,8 @@ python-multipart
 reportlab
 fpdf
 groq
+pydantic
+httpx
+pymongo
 
 
