@@ -1148,3 +1148,384 @@ body {
   transition: opacity 0.5s ease-in-out;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
+
+/* ========== AUTH UI STYLING ========== */
+
+.auth-wrapper {
+  width: 100%;
+  max-width: 420px;
+  margin: 50px auto;
+}
+
+.auth-card {
+  background: rgba(255,255,255,0.08);
+  padding: 25px;
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 0 25px rgba(0,0,0,0.3);
+}
+
+.auth-card h2 {
+  margin-bottom: 12px;
+}
+
+.auth-card button {
+  margin-top: 18px;
+}
+
+.auth-switch {
+  margin-top: 14px;
+  color: #ccc;
+}
+
+.auth-switch button {
+  background: none;
+  border: none;
+  color: #60a5fa;
+  cursor: pointer;
+}
+
+
+/* --- 1. SIDEBAR LOGOUT BUTTON (FIX) --- */
+
+.logout-container {
+    margin-top: auto; /* Button ko sidebar ke bottom mein fix karega */
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Halka divider */
+    width: 100%;
+}
+
+/* Button ka Style - Transparent & Clean */
+/* --- LOGOUT BUTTON (Base Style) --- */
+.logout-style {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 15px;
+    background: transparent; /* Normal state mein transparent */
+    border: none;
+    color: #a0aec0; /* Grey color (Inactive) */
+    font-size: 16px;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 50px; /* 'History' button jaisa Round Pill shape */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth Animation */
+    text-align: left;
+}
+
+/* Icon settings */
+.logout-style svg {
+    stroke: #a0aec0;
+    transition: stroke 0.3s ease;
+}
+
+/* --- 🔥 HOVER / ACTIVE EFFECT (MAGIC HERE) --- */
+.logout-style:hover {
+    /* 1. Premium Red-Orange Gradient (History button style) */
+    background: linear-gradient(90deg, #ff416c, #ff4b2b); 
+    
+    /* 2. Glow Effect (Red Shadow) */
+    box-shadow: 0 4px 15px rgba(255, 75, 43, 0.5); 
+    
+    /* 3. Text aur Icon ko White karo */
+    color: white;
+
+    /* 4. Thoda sa upar uthne ka effect */
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Icon ko bhi white glow do */
+.logout-style:hover svg {
+    stroke: white;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+}
+
+/* --- 2. PROFESSIONAL DARK POPUP (NEW) --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Darker backdrop */
+    backdrop-filter: blur(8px); /* Blur effect (Glassmorphism) */
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Animation ke liye start hidden */
+    transition: opacity 0.3s ease;
+}
+
+/* Jab JS se 'active' class add hogi tab dikhega */
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-box {
+    background: linear-gradient(145deg, #1e202e, #232535); /* Dark Gradient Background */
+    padding: 30px;
+    border-radius: 20px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border shine */
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    color: white;
+}
+
+.modal-overlay.active .modal-box {
+    transform: scale(1); /* Zoom in animation */
+}
+
+.modal-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(255, 165, 0, 0.5)); /* Icon Glow */
+}
+
+.modal-box h3 {
+    margin: 0 0 10px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.modal-box p {
+    color: #a0aec0; /* Muted text */
+    font-size: 14px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Buttons Container */
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-cancel {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background: #3a3d50; /* Dark Grey */
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #4a4d60;
+}
+
+.btn-confirm {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(90deg, #ff6b6b, #ee5253); /* Red Gradient */
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(238, 82, 83, 0.3); /* Red Glow */
+    transition: 0.2s;
+}
+
+.btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(238, 82, 83, 0.4);
+}
+
+/* ======= HISTORY CARD LAYOUT (FULL WIDTH EXPAND) ======= */
+.history-item {
+  position: relative;
+  margin-bottom: 14px;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, #111827, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  transition: box-shadow 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+
+.history-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.8);
+  border-color: rgba(129, 140, 248, 0.7);
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  gap: 12px;
+}
+
+.history-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-icon {
+  font-size: 28px;
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #e5e7eb;
+}
+
+.history-date {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.history-kcal {
+  font-weight: 600;
+  color: #c4b5fd;
+}
+
+.history-menu-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: none;
+  outline: none;
+  background: radial-gradient(circle at top, #1e1b4b, #020617);
+  color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.9);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.history-menu-btn:hover {
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.55);
+  background: radial-gradient(circle at top, #4f46e5, #1e1b4b);
+}
+
+/* FULL-WIDTH CONTENT */
+.history-content {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 64, 175, 0.45));
+  width: 100%;
+}
+
+.history-subtitle {
+  margin-top: 10px;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: #a5b4fc;
+}
+
+.history-advice-box {
+  background: rgba(15, 23, 42, 0.85);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.history-chat-json {
+  font-size: 0.75rem;
+  max-height: 180px;
+  overflow-y: auto;
+  background: rgba(15, 23, 42, 0.9);
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+/* UTIL */
+.hidden {
+  display: none !important;
+}
+
+/* ======= CONTEXT MENU (ChatGPT style) ======= */
+.history-menu-panel {
+  position: absolute;
+  top: 56px;
+  right: 20px;
+  border-radius: 20px;
+  padding: 6px 0;
+  background: radial-gradient(circle at top left, #0b1020, #020617);
+  box-shadow:
+    0 18px 45px rgba(15, 23, 42, 0.95),
+    0 0 0 1px rgba(148, 163, 184, 0.3);
+  z-index: 40;
+  min-width: 220px;
+  backdrop-filter: blur(22px);
+  animation: menu-pop 0.16s ease-out;
+}
+
+.history-menu-item {
+  width: 100%;
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  background: transparent;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.history-menu-item i {
+  width: 18px;
+}
+
+.history-menu-item:hover {
+  background: rgba(31, 41, 55, 0.9);
+}
+
+.history-menu-item.danger {
+  color: #fca5a5;
+}
+
+.history-menu-item.danger:hover {
+  background: rgba(127, 29, 29, 0.9);
+}
+
+@keyframes menu-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.history-item {
+    position: relative !important;
+    overflow: visible !important;
+}
+
+.history-menu-panel {
+    z-index: 9999 !important;
+    position: absolute !important;
+}

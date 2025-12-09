@@ -19,8 +19,113 @@
             Your personalized AI companion for diet, workouts, calories, and health insights.
         </p>
 
-        <a href="dashboard.html" class="home-btn">Start Your Journey →</a>
+        <a href="#login-section" class="home-btn" onclick="scrollToAuth()">Start Your Journey →</a>
     </section>
+     
+     <!-- ========== AUTH SECTION (NEW) ========== -->
+<div class="auth-wrapper">
+
+  <!-- LOGIN FORM -->
+  <div id="login-section" class="auth-card">
+      <h2>Welcome Back 👋</h2>
+      <p>Login to continue your AI Fitness Journey</p>
+
+      <form id="login-form">
+
+          <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="login_email" required />
+          </div>
+
+          <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="login_password" required />
+          </div>
+
+          <button class="primary-btn" type="submit">Login</button>
+      </form>
+
+      <p class="auth-switch">
+          New user?
+          <button id="btnShowRegister" type="button">Create an account</button>
+      </p>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div id="register-section" class="auth-card" style="display:none;">
+      <h2>Create Your Fitness Account</h2>
+
+      <form id="register-form">
+
+          <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="reg_name" required />
+          </div>
+
+          <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="reg_email" required />
+          </div>
+
+          <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="reg_password" required />
+          </div>
+
+          <div class="form-group">
+              <label>Age</label>
+              <input type="number" id="reg_age" required />
+          </div>
+
+          <div class="form-group">
+              <label>Height (cm)</label>
+              <input type="number" id="reg_height" required />
+          </div>
+
+          <div class="form-group">
+              <label>Weight (kg)</label>
+              <input type="number" id="reg_weight" required />
+          </div>
+
+          <div class="form-group">
+              <label>Gender</label>
+              <select id="reg_gender">
+                 <option value="" disabled selected>Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+              </select>
+          </div>
+
+          <div class="form-group">
+              <label>Goal</label>
+              <select id="reg_goal">
+                 <option value="" disabled selected>Select Goal</option>
+                  <option value="fat loss">Fat Loss</option>
+                  <option value="muscle gain">Muscle Gain</option>
+                  <option value="general">General Fitness</option>
+              </select>
+          </div>
+          <div class="form-group full">
+              <label>Activity Level</label>
+             <select id="profile_activity">
+                  <option value="" disabled selected>Select activity level</option>
+                  <option value="sedentary">Sedentary (Little or no exercise)</option>
+                  <option value="lightly active">Lightly Active (1-3 days/week)</option>
+                  <option value="moderately active">Moderately Active (3-5 days/week)</option>
+                  <option value="very active">Very Active (6-7 days/week)</option>
+             </select>
+          </div>
+          <button class="primary-btn" type="submit">Register</button>
+      </form>
+
+      <p class="auth-switch">
+         Already have an account?
+         <button id="btnShowLogin" type="button">Login</button>
+     </p>
+  </div>
+</div>
+
 
     <!-- PREMIUM TOOLS -->
     <section class="home-tools">
@@ -79,6 +184,12 @@
 
         </div>
     </section>
-
+   
+    <script>
+      if (localStorage.getItem("authToken")) {
+      window.location.href = "dashboard.html";
+      }
+    </script>
+    <script src="script.js"></script> 
 </body>
 </html>
