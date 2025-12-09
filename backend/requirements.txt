@@ -9,5 +9,6 @@ pydantic
 httpx
 bcrypt
 pymongo
+python-jose[cryptography]
 
 
