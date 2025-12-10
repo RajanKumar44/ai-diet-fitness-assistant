@@ -1465,6 +1465,7 @@ body {
 /* ======= CONTEXT MENU (ChatGPT style) ======= */
 .history-menu-panel {
   position: absolute;
+  pointer-events: auto !important;
   top: 56px;
   right: 20px;
   border-radius: 20px;
@@ -1491,6 +1492,8 @@ body {
   font-size: 0.9rem;
   cursor: pointer;
   text-align: left;
+  pointer-events: auto !important;
+  cursor: pointer;
 }
 
 .history-menu-item i {
@@ -1520,12 +1523,156 @@ body {
   }
 }
 
+/* ====== HISTORY ITEM STACKING FIX ====== */
 .history-item {
-    position: relative !important;
-    overflow: visible !important;
+    position: relative;          /* card ko positioned rakho */
+    overflow: visible;           /* popup cut na ho */
+    z-index: 1;                  /* normal state */
 }
 
+/* jab is card ka menu open ho, tab ise sabse upar lao */
+.history-item.menu-open {
+    z-index: 999;                /* iss card ko dusre cards ke upar le aao */
+}
+
+/* popup panel already top-right pe absolute hai, high z-index ke sath */
 .history-menu-panel {
-    z-index: 9999 !important;
-    position: absolute !important;
+    pointer-events: auto !important;
+    position: absolute;
+    top: 56px;
+    right: 20px;
+    z-index: 9999;
+}
+
+
+/* FIX POPUP ORIENTATION */
+#historyModal.modal-overlay {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#historyModal.active {
+    display: flex;
+}
+
+/* MODAL BOX */
+.history-modal-box {
+    width: 90%;
+    max-width: 500px;
+    max-height: 85vh; 
+    background: linear-gradient(145deg, #1e2030, #26293a);
+    border-radius: 18px;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+.modal-header {
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+/* BACK BUTTON */
+.back-btn {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.back-btn:hover {
+    color: #fff;
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+    cursor: pointer;
+    font-size: 24px;
+    color: #cbd5f5;
+}
+
+.close-btn:hover {
+    color: #fff;
+}
+
+/* SCROLLABLE CONTENT */
+.modal-body-scroll {
+    padding: 16px;
+    overflow-y: auto;
+    max-height: calc(85vh - 60px);
+}
+
+#historyModal {
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+}
+
+#historyModal.show {
+    opacity: 1;
+}
+
+.history-modal-box {
+    max-height: 85vh;
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+
+
+.pretty-chat-history {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 10px;
+}
+
+.chat-block {
+    padding: 12px 16px;
+    border-radius: 10px;
+    max-width: 95%;
+    line-height: 1.5;
+}
+
+.chat-block.user {
+    background: rgba(255, 255, 255, 0.06);
+    border-left: 4px solid #60a5fa;
+}
+
+.chat-block.bot {
+    background: rgba(255, 255, 255, 0.10);
+    border-left: 4px solid #a78bfa;
+}
+
+.chat-role {
+    font-weight: bold;
+    margin-bottom: 6px;
+    opacity: 0.8;
+}
+
+.chat-message {
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.chat-message ul {
+    margin-left: 20px;
+}
+
+.chat-message ol {
+    margin-left: 22px;
 }

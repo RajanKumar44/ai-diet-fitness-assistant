@@ -527,14 +527,24 @@
 </div>
       <div id="historyModal" class="modal-overlay">
     <div class="modal-box history-modal-box">
+
         <div class="modal-header">
+            <button class="back-btn" onclick="closeHistoryDetail()">
+                ← Back
+            </button>
+
             <h3>📂 Session Details</h3>
+
             <span class="close-btn" onclick="closeHistoryDetail()">&times;</span>
         </div>
+
+        <!-- Scrollable Content -->
         <div id="historyDetailContent" class="modal-body-scroll">
-            </div>
+        </div>
+
     </div>
 </div>
+
 
 </body>
 </html>

@@ -56,6 +56,62 @@ def extract_day_number(key):
     nums = re.findall(r'\d+', str(key))
     return int(nums[0]) if nums else 999
 
+def make_bold(text):
+    return f"<<BOLD>>{text}<<END>>"
+
+def format_chat_message(text):
+    """
+    Converts AI/User message into structured printable lines:
+    - Bold formatting
+    - Bullet lists
+    - Numbered lists
+    - Paragraph spacing
+    """
+
+    lines = []
+    if not text:
+        return lines
+
+    t = str(text).strip()
+    bold_regex = r"\*\*(.*?)\*\*"
+
+    raw_lines = t.split("\n")
+
+    for line in raw_lines:
+        stripped = line.strip()
+
+        # Empty line → paragraph spacing
+        if stripped == "":
+            lines.append("")
+            continue
+
+        # Bullets
+        if stripped.startswith("* ") or stripped.startswith("- "):
+            clean = stripped[2:].strip()
+            lines.append({"type": "bullet", "text": clean})
+            continue
+
+        # Numbered list
+        num_match = re.match(r"^(\d+)\.\s+(.*)", stripped)
+        if num_match:
+            number, text_val = num_match.groups()
+            lines.append({"type": "number", "num": number, "text": text_val})
+            continue
+
+        # Normal paragraph line — parse inline bold **text**
+        parts = re.split(bold_regex, stripped)
+        formatted = []
+        for i, part in enumerate(parts):
+            if i % 2 == 1:
+                # captured group -> bold
+                formatted.append({"type": "bold", "text": part})
+            else:
+                if part:
+                    formatted.append({"type": "normal", "text": part})
+        lines.append({"type": "paragraph", "content": formatted})
+
+    return lines
+
 # ---------------------------------------------------
 # 3. PDF GENERATOR
 # ---------------------------------------------------
@@ -374,50 +430,131 @@ def create_summary_pdf(username, calories, diet_plan, workout_plan, ai_advice, c
 
     
     # ==========================
-    # 4. AI CHAT HISTORY  (NEW FIX)
+    # 4. AI CHAT HISTORY — CHATGPT STYLE
     # ==========================
     if chat_history:
         draw_section_title("Chat History", "💬")
+
+    for msg in chat_history:
+        role = msg.get("role", "")
+        content = msg.get("content", "")
+        if not content:
+            continue
+
+        parsed = format_chat_message(content)
+
+        # Bubble background
+        if role == "user":
+            bubble_color = colors.HexColor("#E3F2FD")
+            label = "You"
+        else:
+            bubble_color = colors.HexColor("#F3E5F5")
+            label = "Coach"
+
+        # Pre-calculate height: convert parsed items to plain strings first
+        bubble_lines = []
+        for item in parsed:
+            if isinstance(item, dict):
+                t = item.get("type", "")
+                if t == "bullet":
+                    bubble_lines.append("• " + str(item.get("text", "")))
+                elif t == "number":
+                    bubble_lines.append(f"{item.get('num', '')}. {item.get('text', '')}")
+                elif t == "paragraph":
+                    parts = item.get("content", [])
+                    txt = "".join([p.get("text", "") if isinstance(p, dict) else str(p) for p in parts])
+                    bubble_lines.append(txt)
+                else:
+                    # fallback - stringify
+                    bubble_lines.append(json.dumps(item))
+            else:
+                bubble_lines.append(str(item))
+
+        total_lines = sum([len(textwrap.wrap(x, 90)) for x in bubble_lines])
+        bubble_height = 35 + (total_lines * 14)
+
+        if y - bubble_height < 50:
+            reset_page()
+
+        # Draw background
+        c.setFillColor(bubble_color)
+        c.rect(40, y - bubble_height, width - 80, bubble_height, fill=1, stroke=0)
+
+        # Label
+        c.setFillColor(colors.black)
+        c.setFont(BOLD_FONT, 11)
+        c.drawString(50, y - 20, f"{label}:")
+
+        # Draw text
         c.setFont(DEFAULT_FONT, 10)
+        text_y = y - 40
 
-        for msg in chat_history:
-            role = msg.get("role", "")
-            content = msg.get("content", "")
-
-            if not content:
+        for item in parsed:
+            # BULLETS
+            if isinstance(item, dict) and item.get("type") == "bullet":
+                wrapped = textwrap.wrap(item["text"], 90)
+                for w in wrapped:
+                    if text_y < 50:
+                        reset_page()
+                        text_y = y - 40
+                    c.drawString(60, text_y, "• " + w)
+                    text_y -= 14
                 continue
 
-            # Bubble color + label
-            if role == "user":
-                bubble_color = colors.HexColor("#E3F2FD")   # light blue
-                label = "You"
-            else:
-                bubble_color = colors.HexColor("#F3E5F5")   # light purple
-                label = "Coach"
+            # NUMBERED LISTS
+            if isinstance(item, dict) and item.get("type") == "number":
+                wrapped = textwrap.wrap(item["text"], 90)
+                for w in wrapped:
+                    if text_y < 50:
+                        reset_page()
+                        text_y = y - 40
+                    c.drawString(60, text_y, f"{item['num']}. {w}")
+                    text_y -= 14
+                continue
 
-            # Bubble rectangle height calculation
-            wrapped = textwrap.wrap(content, 80)
-            bubble_height = 20 + (len(wrapped) * 12)
+            # PARAGRAPH (HAS NORMAL + BOLD MIX)
+            if isinstance(item, dict) and item.get("type") == "paragraph":
+                line = ""
+                for part in item["content"]:
+                    if part["type"] == "bold":
+                        if line.strip():
+                            if text_y < 50:
+                                reset_page()
+                                text_y = y - 40
+                            c.drawString(60, text_y, line)
+                            text_y -= 14
+                        if text_y < 50:
+                            reset_page()
+                            text_y = y - 40
+                        c.setFont(BOLD_FONT, 10)
+                        c.drawString(60, text_y, part["text"])
+                        text_y -= 14
+                        c.setFont(DEFAULT_FONT, 10)
+                        line = ""
+                    else:
+                        line += part["text"]
 
-            if y - bubble_height < 50:
-                reset_page()
+                if line.strip():
+                    if text_y < 50:
+                        reset_page()
+                        text_y = y - 40
+                    c.drawString(60, text_y, line)
+                    text_y -= 14
+                continue
 
-            # Bubble background box
-            c.setFillColor(bubble_color)
-            c.rect(40, y - bubble_height, width - 80, bubble_height, fill=1, stroke=0)
+            # SIMPLE STRING LINE
+            if isinstance(item, str):
+                wrapped = textwrap.wrap(item, 90)
+                for w in wrapped:
+                    if text_y < 50:
+                        reset_page()
+                        text_y = y - 40
+                    c.drawString(60, text_y, w)
+                    text_y -= 14
+                continue
 
-            # Text inside bubble
-            c.setFillColor(colors.black)
-            c.setFont(BOLD_FONT, 10)
-            c.drawString(50, y - 16, f"{label}:")
-
-            c.setFont(DEFAULT_FONT, 10)
-            txt_y = y - 32
-            for line in wrapped:
-                c.drawString(60, txt_y, line)
-                txt_y -= 12
-
-            y -= (bubble_height + 10)
+        # Move y below the bubble for the next message
+        y = text_y - 14
 
     c.save()
     return filepath

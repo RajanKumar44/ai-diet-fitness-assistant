@@ -22,7 +22,7 @@ let FIRST_LOAD = true;
 
 // =================== API BASE URL =================== //
 // Change this to your backend URL + port
-const API_BASE = "https://ai-diet-fitness-assistant.onrender.com";
+const API_BASE = "http://localhost:8000";
 
 // ------------- AUTH CONFIG -------------
 const BASE_URL = API_BASE;  // same as backend
@@ -1341,7 +1341,10 @@ async function renderHistory() {
                     </div>
 
                     <h4 class="history-subtitle">💬 Chat History</h4>
-                    <pre class="history-chat-json">${escapeHtml(JSON.stringify(item.chat_history || [], null, 2))}</pre>
+                    <div class="history-chat-box">
+                       ${renderChatHistoryPretty(item.chat_history || [])}
+                     </div>
+
                 </div>
 
                 <!-- Context Menu -->
@@ -1375,118 +1378,127 @@ async function renderHistory() {
             const menuPanel = card.querySelector(".history-menu-panel");
             const titleEl = card.querySelector(".history-title");
 
+            // ⭐ FIXED MENU ITEM HANDLER (PASTE EXACTLY HERE)
+menuPanel.querySelectorAll(".history-menu-item").forEach(item => {
+    item.addEventListener("click", (e) => {
+
+        // Prevent card header click from triggering
+        e.preventDefault();
+        e.stopPropagation();
+
+        const action = item.dataset.action;
+
+        // Close menu
+        menuPanel.classList.add("hidden");
+        card.classList.remove("menu-open");
+
+        // ========== ACTION HANDLERS ==========
+        if (action === "popup") {
+            console.log("Opening popup…");
+            openHistoryDetail(index);   // ⭐ POPUP FINALLY WORKS
+            return;
+        }
+
+        if (action === "toggle") {
+            content.classList.toggle("hidden");
+            return;
+        }
+
+        if (action === "download") {
+            // backend call (same as your existing logic)
+            const payload = {
+                username: USER_PROFILE.name || "User",
+                calories: item.calories || 0,
+                diet_plan: item.diet_plan || {},
+                workout_plan: item.workout_plan || {},
+                ai_advice: item.ai_advice || "",
+                chat_history: item.chat_history || [],
+            };
+            callApi("/export-summary", payload);
+            return;
+        }
+
+        if (action === "rename") {
+            const newTitle = prompt("Enter new session name:", item.title);
+            if (newTitle) {
+                callApi("/history/rename", {
+                    history_id: item._id,
+                    title: newTitle
+                }).then(() => renderHistory());
+            }
+            return;
+        }
+
+        if (action === "delete") {
+            const ok = confirm("Delete this session permanently?");
+            if (ok) {
+                callApi("/history/delete", {
+                    history_id: item._id
+                }).then(() => renderHistory());
+            }
+            return;
+        }
+    });
+});
+
+
             // 1) PURA CARD (header area) click → expand / collapse
             header.addEventListener("click", (e) => {
                 // agar click menu button ya uske icon pe hua, to ignore
                 if (e.target.closest(".history-menu-btn")) return;
                 content.classList.toggle("hidden");
             });
-
             // 2) MENU BUTTON → context menu open / close
-            menuBtn.addEventListener("click", (e) => {
-              e.preventDefault();  
-              e.stopPropagation();
+menuBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-                // baaki sab menu band karo
-                document.querySelectorAll(".history-menu-panel").forEach(p => {
-                    if (p !== menuPanel) p.classList.add("hidden");
-                });
+    // 🔹 pehle sab menus band karo + sab cards se 'menu-open' hatao
+    document.querySelectorAll(".history-menu-panel").forEach(p => {
+        p.classList.add("hidden");
+    });
+    document.querySelectorAll(".history-item").forEach(cardEl => {
+        cardEl.classList.remove("menu-open");
+    });
 
-                menuPanel.classList.toggle("hidden");
-            });
+    // 🔹 agar yeh panel abhi hidden tha → ab open karo + is card ko top pe lao
+    const willOpen = menuPanel.classList.contains("hidden");
+    if (willOpen) {
+        menuPanel.classList.remove("hidden");
+        card.classList.add("menu-open");     // ⬅️ is card ko upar le aaya
+    } else {
+        // Already open hai → close karo
+        menuPanel.classList.add("hidden");
+        card.classList.remove("menu-open");
+    }
+});
 
-            // 3) MENU ITEMS FUNCTIONALITY
-            menuPanel.querySelectorAll(".history-menu-item").forEach(btn => {
-                btn.addEventListener("click", async (e) => {
-                    e.stopPropagation();
-                    const action = btn.dataset.action;
-                    menuPanel.classList.add("hidden");
 
-                    // -> a) OPEN IN POPUP (existing modal use karo)
-                    if (action === "popup") {
-                        openHistoryDetail(index);
-                        return;
-                    }
 
-                    // -> b) EXPAND / COLLAPSE
-                    if (action === "toggle") {
-                        content.classList.toggle("hidden");
-                        return;
-                    }
-
-                    // -> c) DOWNLOAD SUMMARY (PDF)
-                    if (action === "download") {
-                        const payload = {
-                            username: item.username || USER_PROFILE.name || "User",
-                            calories: item.calories || 0,
-                            diet_plan: item.diet_plan || {},
-                            workout_plan: item.workout_plan || {},
-                            ai_advice: item.ai_advice || "",
-                            chat_history: item.chat_history || [],
-                        };
-                        const res = await callApi("/export-summary", payload);
-                        if (res && res.pdf_url) {
-                            window.open(res.pdf_url, "_blank");
-                        } else {
-                            showToast("Failed to download summary.", "error");
-                        }
-                        return;
-                    }
-
-                    // -> d) RENAME SESSION (DB me save)
-                    if (action === "rename") {
-                        const currentTitle = item.title || sessionTitle;
-                        const newTitle = prompt("Enter new session name:", currentTitle);
-                        if (!newTitle || newTitle.trim() === "") return;
-
-                        const res = await callApi("/history/rename", {
-                            history_id: historyId,
-                            title: newTitle.trim()
-                        });
-
-                        if (res && res.success) {
-                            item.title = newTitle.trim(); // local update
-                            titleEl.textContent = newTitle.trim();
-                            showToast("Session renamed.", "success");
-                        } else {
-                            showToast("Rename failed.", "error");
-                        }
-                        return;
-                    }
-
-                    // -> e) DELETE SESSION
-                    if (action === "delete") {
-                        const ok = confirm("Delete this session permanently?");
-                        if (!ok) return;
-
-                        const res = await callApi("/history/delete", {
-                            history_id: historyId
-                        });
-
-                        if (res && res.success) {
-                            card.remove();
-                            showToast("Session deleted.", "success");
-                        } else {
-                            showToast("Delete failed.", "error");
-                        }
-                        return;
-                    }
-                });
-            });
 
             container.appendChild(card);
         });
 
         // 4) GLOBAL CLICK → sab context menu band
         document.addEventListener("click", (ev) => {
+          
+    // ⭐ if clicking inside menu item → do NOT close menu
+    if (ev.target.closest(".history-menu-item")) {
+        return;  // allow item to work normally
+    }
     if (!ev.target.closest(".history-menu-panel") &&
         !ev.target.closest(".history-menu-btn")) {
 
         document
           .querySelectorAll(".history-menu-panel")
           .forEach(panel => panel.classList.add("hidden"));
+
+        document
+          .querySelectorAll(".history-item")
+          .forEach(cardEl => cardEl.classList.remove("menu-open"));
     }
 });
+
 
     } catch (e) {
         console.error("History Render Error", e);
@@ -2032,33 +2044,75 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // ================== OPEN HISTORY MODAL ================== //
 function openHistoryDetail(index) {
+    console.log("OPENING POPUP WITH INDEX:", index);
+
     const data = _globalHistoryData[index];
     const modal = document.getElementById("historyModal");
     const content = document.getElementById("historyDetailContent");
 
-    if (!data || !modal || !content) return;
+    if (!data || !modal || !content) {
+        console.error("Modal elements or data missing!");
+        return;
+    }
 
-    // Generate Modal Content
+    // Fill modal content
     content.innerHTML = `
-        <div style="margin-bottom: 20px;">
-            <p><strong>Date:</strong> ${new Date(data.date).toLocaleString()}</p>
-            <p><strong>Total Calories:</strong> ${data.calories}</p>
-        </div>
+        <h2 style="margin-bottom:10px;">${data.title || "Session Details"}</h2>
+        <p><strong>Date:</strong> ${new Date(data.date).toLocaleString()}</p>
+        <p><strong>Total Calories:</strong> ${data.calories || 0} kcal</p>
 
-        <h4 style="color:#a5b4fc; margin-top:15px;">🍽️ Diet Plan</h4>
-        <div class="pretty-result">${renderDietPlanPretty(data.diet_plan)}</div>
+        <h3>Diet Plan</h3>
+        ${renderDietPlanPretty(data.diet_plan)}
 
-        <h4 style="color:#a5b4fc; margin-top:15px;">💪 Workout Plan</h4>
-        <div class="pretty-result">${renderWorkoutPlanPretty(data.workout_plan)}</div>
+        <h3>Workout Plan</h3>
+        ${renderWorkoutPlanPretty(data.workout_plan)}
 
-        <h4 style="color:#a5b4fc; margin-top:15px;">🤖 AI Advice</h4>
-        <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px;">${renderMarkdown(data.ai_advice || "No advice saved.")}</div>
+        <h3>AI Advice</h3>
+        <div>${renderMarkdown(data.ai_advice || "")}</div>
     `;
 
-    modal.style.display = "flex";
+    // ⭐ REAL FIX HERE
+    modal.classList.add("active");
+    // ⭐ Reset state for re-open
+modal.classList.add("show");
+const box = document.querySelector(".history-modal-box");
+if (box) box.scrollTop = 0;
 }
 
+
 function closeHistoryDetail() {
-    document.getElementById("historyModal").style.display = "none";
+    const modal = document.getElementById("historyModal");
+
+    // Remove visible class
+    modal.classList.remove("show");
+
+    // Fade-out animation handling
+    setTimeout(() => {
+        modal.classList.remove("active");  // IMPORTANT
+    }, 200);
 }
+
+function renderChatHistoryPretty(chatArray) {
+    if (!Array.isArray(chatArray)) return "<p>No chat history available.</p>";
+
+    let html = `<div class="pretty-chat-history">`;
+
+    chatArray.forEach(msg => {
+        const role = msg.role === "assistant" ? "bot" : "user";
+        const name = role === "bot" ? "🤖 AI Assistant" : "🧑 User";
+
+        let content = renderMarkdown(msg.content || "");
+
+        html += `
+            <div class="chat-block ${role}">
+                <div class="chat-role">${name}</div>
+                <div class="chat-message">${content}</div>
+            </div>
+        `;
+    });
+
+    html += "</div>";
+    return html;
+}
+
 
