@@ -22,7 +22,7 @@ let FIRST_LOAD = true;
 
 // =================== API BASE URL =================== //
 // Change this to your backend URL + port
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://ai-diet-fitness-assistant.onrender.com";
 
 // ------------- AUTH CONFIG -------------
 const BASE_URL = API_BASE;  // same as backend
